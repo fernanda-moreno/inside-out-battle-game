@@ -174,11 +174,14 @@ void updatePlayer() {
 	if (BUTTON_HELD(BUTTON_DOWN) && player.row < SCREENHEIGHT - 20) {
 		player.row += player.rDel;
 	}
+
     if (BUTTON_HELD(BUTTON_A) && player.bulletTimer >= 20) {
 		firePlayerBullets();
 		player.bulletTimer = 0;
 	}
 	player.bulletTimer++;
+
+	
 
 	// When lightning hits player, player loses a life and lightning disappears
 	if (player.aniState == 1) {
@@ -397,12 +400,25 @@ void updatePlayerBullets(PLAYERBULLET* bullet) {
 
 // Draw the player's bullets
 void drawPlayerBullets(PLAYERBULLET* bullet) {
-    if (bullet->active) {
-		shadowOAM[bullet->index].attr0 = (bullet->row) | ATTR0_4BPP | ATTR0_SQUARE;	  	  	
-		shadowOAM[bullet->index].attr1 = (bullet->col) | ATTR1_SMALL;
-	   	shadowOAM[bullet->index].attr2 =  ATTR2_TILEID(22, 1) | ATTR2_PALROW(0);
-	} else {
-		shadowOAM[bullet->index].attr0 = ATTR0_HIDE;
+	if (player.aniState == 1) {
+		if (bullet->active) {
+			shadowOAM[bullet->index].attr0 = (bullet->row) | ATTR0_4BPP | ATTR0_SQUARE;	  	  	
+			shadowOAM[bullet->index].attr1 = (bullet->col) | ATTR1_SMALL;
+			shadowOAM[bullet->index].attr2 =  ATTR2_TILEID(22, 1) | ATTR2_PALROW(0);
+		} else {
+			shadowOAM[bullet->index].attr0 = ATTR0_HIDE;
+		}
+	}
+
+	if (player.aniState == 3) {
+		if (bullet->active) {
+			shadowOAM[bullet->index].attr0 = (bullet->row) | ATTR0_4BPP | ATTR0_SQUARE;	  	  	
+			shadowOAM[bullet->index].attr1 = (bullet->col) | ATTR1_SMALL;
+			shadowOAM[bullet->index].attr2 =  ATTR2_TILEID(22, 3) | ATTR2_PALROW(0);
+		} else {
+			shadowOAM[bullet->index].attr0 = ATTR0_HIDE;
+		}
+
 	}
 
 }

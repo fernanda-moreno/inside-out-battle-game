@@ -1193,11 +1193,14 @@ void updatePlayer() {
  if ((~((*(volatile unsigned short *)0x04000130)) & ((1<<7))) && player.row < 160 - 20) {
   player.row += player.rDel;
  }
+
     if ((~((*(volatile unsigned short *)0x04000130)) & ((1<<0))) && player.bulletTimer >= 20) {
   firePlayerBullets();
   player.bulletTimer = 0;
  }
  player.bulletTimer++;
+
+
 
 
  if (player.aniState == 1) {
@@ -1233,8 +1236,6 @@ void updatePlayer() {
    }
    memball1.active = 0;
 
-
-
   }
 
  }
@@ -1260,9 +1261,6 @@ void updatePlayer() {
  if ((!(~(oldButtons)&((1<<8))) && (~buttons & ((1<<8))))) {
   player.aniState = 1;
  }
-
-
-
 
 
 
@@ -1421,12 +1419,25 @@ void updatePlayerBullets(PLAYERBULLET* bullet) {
 
 
 void drawPlayerBullets(PLAYERBULLET* bullet) {
-    if (bullet->active) {
-  shadowOAM[bullet->index].attr0 = (bullet->row) | (0<<13) | (0<<14);
-  shadowOAM[bullet->index].attr1 = (bullet->col) | (1<<14);
-     shadowOAM[bullet->index].attr2 = ((1)*32+(22)) | ((0)<<12);
- } else {
-  shadowOAM[bullet->index].attr0 = (2<<8);
+ if (player.aniState == 1) {
+  if (bullet->active) {
+   shadowOAM[bullet->index].attr0 = (bullet->row) | (0<<13) | (0<<14);
+   shadowOAM[bullet->index].attr1 = (bullet->col) | (1<<14);
+   shadowOAM[bullet->index].attr2 = ((1)*32+(22)) | ((0)<<12);
+  } else {
+   shadowOAM[bullet->index].attr0 = (2<<8);
+  }
+ }
+
+ if (player.aniState == 3) {
+  if (bullet->active) {
+   shadowOAM[bullet->index].attr0 = (bullet->row) | (0<<13) | (0<<14);
+   shadowOAM[bullet->index].attr1 = (bullet->col) | (1<<14);
+   shadowOAM[bullet->index].attr2 = ((3)*32+(22)) | ((0)<<12);
+  } else {
+   shadowOAM[bullet->index].attr0 = (2<<8);
+  }
+
  }
 
 }
@@ -1524,7 +1535,7 @@ void initMemoryBalls() {
 
 
 void updateMemoryBalls() {
-# 535 "game.c"
+# 546 "game.c"
 }
 
 

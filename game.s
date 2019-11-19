@@ -787,32 +787,50 @@ drawPlayerBullets:
 	@ Function supports interworking.
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
+	ldr	r3, .L163
+	ldr	r3, [r3, #28]
+	cmp	r3, #1
+	str	lr, [sp, #-4]!
+	beq	.L161
+	cmp	r3, #3
+	bne	.L154
 	ldr	r3, [r0, #32]
 	cmp	r3, #0
 	ldr	r3, [r0, #36]
-	bne	.L161
+	bne	.L162
+.L158:
 	mov	r1, #512
-	ldr	r2, .L162
+	ldr	r2, .L163+4
 	lsl	r3, r3, #3
 	strh	r1, [r2, r3]	@ movhi
+.L154:
+	ldr	lr, [sp], #4
 	bx	lr
 .L161:
-	str	lr, [sp, #-4]!
-	mov	lr, #54
+	ldr	r3, [r0, #32]
+	cmp	r3, #0
+	movne	lr, #54
+	ldr	r3, [r0, #36]
+	beq	.L158
+.L160:
 	ldr	r2, [r0]
-	ldr	ip, .L162
+	ldr	ip, .L163+4
 	ldr	r0, [r0, #4]
 	lsl	r3, r3, #3
 	add	r1, ip, r3
 	orr	r2, r2, #16384
-	strh	lr, [r1, #4]	@ movhi
 	strh	r0, [ip, r3]	@ movhi
+	strh	lr, [r1, #4]	@ movhi
 	strh	r2, [r1, #2]	@ movhi
 	ldr	lr, [sp], #4
 	bx	lr
-.L163:
-	.align	2
 .L162:
+	mov	lr, #118
+	b	.L160
+.L164:
+	.align	2
+.L163:
+	.word	player
 	.word	shadowOAM
 	.size	drawPlayerBullets, .-drawPlayerBullets
 	.align	2
@@ -825,21 +843,21 @@ firePlayerBullets:
 	@ Function supports interworking.
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
-	ldr	r0, .L174
+	ldr	r0, .L175
 	mov	r3, #0
 	mov	r2, r0
-	b	.L167
-.L165:
+	b	.L168
+.L166:
 	add	r3, r3, #1
 	cmp	r3, #30
 	add	r2, r2, #40
 	bxeq	lr
-.L167:
+.L168:
 	ldr	r1, [r2, #32]
 	cmp	r1, #0
-	bne	.L165
+	bne	.L166
 	mov	r1, #1
-	ldr	r2, .L174+4
+	ldr	r2, .L175+4
 	add	r3, r3, r3, lsl #2
 	str	lr, [sp, #-4]!
 	lsl	r3, r3, #3
@@ -851,9 +869,9 @@ firePlayerBullets:
 	str	r1, [r2, #32]
 	ldr	lr, [sp], #4
 	bx	lr
-.L175:
+.L176:
 	.align	2
-.L174:
+.L175:
 	.word	b
 	.word	player
 	.size	firePlayerBullets, .-firePlayerBullets
@@ -874,12 +892,12 @@ initBadBullets:
 	mov	r1, #0
 	mov	r6, #2
 	mvn	r5, #1
-	ldr	ip, .L180
-	ldr	r3, .L180+4
+	ldr	ip, .L181
+	ldr	r3, .L181+4
 	ldr	r4, [ip, #4]
 	ldr	lr, [ip]
 	add	ip, r3, #800
-.L177:
+.L178:
 	str	r2, [r3, #36]
 	str	r0, [r3, #28]
 	str	r0, [r3, #24]
@@ -892,12 +910,12 @@ initBadBullets:
 	add	r3, r3, #40
 	cmp	r3, ip
 	add	r2, r2, #1
-	bne	.L177
+	bne	.L178
 	pop	{r4, r5, r6, r7, lr}
 	bx	lr
-.L181:
+.L182:
 	.align	2
-.L180:
+.L181:
 	.word	depression
 	.word	bb
 	.size	initBadBullets, .-initBadBullets
@@ -936,17 +954,17 @@ drawBadBullets:
 	ldr	r3, [r0, #32]
 	cmp	r3, #0
 	ldr	r3, [r0, #36]
-	bne	.L195
+	bne	.L196
 	mov	r1, #512
-	ldr	r2, .L196
+	ldr	r2, .L197
 	lsl	r3, r3, #3
 	strh	r1, [r2, r3]	@ movhi
 	bx	lr
-.L195:
+.L196:
 	str	lr, [sp, #-4]!
 	mov	lr, #56
 	ldr	r2, [r0]
-	ldr	ip, .L196
+	ldr	ip, .L197
 	ldr	r0, [r0, #4]
 	lsl	r3, r3, #3
 	add	r1, ip, r3
@@ -956,9 +974,9 @@ drawBadBullets:
 	strh	r2, [r1, #2]	@ movhi
 	ldr	lr, [sp], #4
 	bx	lr
-.L197:
+.L198:
 	.align	2
-.L196:
+.L197:
 	.word	shadowOAM
 	.size	drawBadBullets, .-drawBadBullets
 	.align	2
@@ -989,13 +1007,13 @@ initMemoryBalls:
 	@ frame_needed = 0, uses_anonymous_args = 0
 	push	{r3, r4, r5, r6, r7, r8, r9, r10, fp, lr}
 	mov	r7, #16
-	ldr	r5, .L202
-	ldr	r6, .L202+4
+	ldr	r5, .L203
+	ldr	r6, .L203+4
 	str	r7, [r5, #24]
 	str	r7, [r5, #28]
 	mov	lr, pc
 	bx	r6
-	ldr	r10, .L202+8
+	ldr	r10, .L203+8
 	smull	r8, r9, r0, r10
 	asr	r3, r0, #31
 	rsb	r3, r3, r9, asr #2
@@ -1008,13 +1026,13 @@ initMemoryBalls:
 	bx	r6
 	mov	r8, #1
 	mov	r1, #70
-	ldr	r9, .L202+12
+	ldr	r9, .L203+12
 	smull	r2, r3, r0, r9
 	add	r2, r0, r3
 	asr	r3, r0, #31
 	rsb	r3, r3, r2, asr #5
 	rsb	r3, r3, r3, lsl #4
-	ldr	r4, .L202+16
+	ldr	r4, .L203+16
 	sub	r0, r0, r3, lsl #2
 	add	r0, r0, #25
 	str	r1, [r5, #36]
@@ -1047,9 +1065,9 @@ initMemoryBalls:
 	str	r2, [r4, #36]
 	pop	{r3, r4, r5, r6, r7, r8, r9, r10, fp, lr}
 	bx	lr
-.L203:
+.L204:
 	.align	2
-.L202:
+.L203:
 	.word	memball1
 	.word	rand
 	.word	156180629
@@ -1079,14 +1097,14 @@ drawMemoryBalls:
 	@ Function supports interworking.
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
-	ldr	r2, .L212
+	ldr	r2, .L213
 	ldr	r3, [r2, #32]
 	cmp	r3, #0
 	str	lr, [sp, #-4]!
 	ldr	r3, [r2, #36]
-	beq	.L206
+	beq	.L207
 	mov	ip, #46
-	ldr	r1, .L212+4
+	ldr	r1, .L213+4
 	ldr	r0, [r2]
 	lsl	r3, r3, #3
 	ldr	lr, [r2, #4]
@@ -1095,24 +1113,24 @@ drawMemoryBalls:
 	strh	lr, [r1, r3]	@ movhi
 	strh	r2, [r0, #2]	@ movhi
 	strh	ip, [r0, #4]	@ movhi
-.L207:
-	ldr	r2, .L212+8
+.L208:
+	ldr	r2, .L213+8
 	ldr	r3, [r2, #32]
 	cmp	r3, #0
 	ldr	r3, [r2, #36]
-	bne	.L211
+	bne	.L212
 	mov	r2, #512
 	lsl	r3, r3, #3
 	strh	r2, [r1, r3]	@ movhi
 	ldr	lr, [sp], #4
 	bx	lr
-.L206:
+.L207:
 	mov	r2, #512
-	ldr	r1, .L212+4
+	ldr	r1, .L213+4
 	lsl	r3, r3, #3
 	strh	r2, [r1, r3]	@ movhi
-	b	.L207
-.L211:
+	b	.L208
+.L212:
 	mov	ip, #44
 	ldr	r0, [r2]
 	ldr	lr, [r2, #4]
@@ -1124,9 +1142,9 @@ drawMemoryBalls:
 	strh	ip, [r0, #4]	@ movhi
 	ldr	lr, [sp], #4
 	bx	lr
-.L213:
+.L214:
 	.align	2
-.L212:
+.L213:
 	.word	memball1
 	.word	shadowOAM
 	.word	memball2
@@ -1150,40 +1168,40 @@ initLives:
 	mov	r4, #50
 	mov	lr, #70
 	mov	ip, #90
-	ldr	r2, .L216
+	ldr	r2, .L217
 	str	r6, [r2]
 	str	r3, [r2, #8]
 	str	r3, [r2, #12]
 	str	r0, [r2, #4]
 	str	r1, [r2, #16]
-	ldr	r2, .L216+4
+	ldr	r2, .L217+4
 	str	r5, [r2]
 	str	r3, [r2, #8]
 	str	r3, [r2, #12]
 	str	r0, [r2, #4]
 	str	r1, [r2, #16]
-	ldr	r2, .L216+8
+	ldr	r2, .L217+8
 	str	r4, [r2]
 	str	r3, [r2, #8]
 	str	r3, [r2, #12]
 	str	r0, [r2, #4]
 	str	r1, [r2, #16]
-	ldr	r2, .L216+12
+	ldr	r2, .L217+12
 	str	lr, [r2]
 	str	r3, [r2, #8]
 	str	r3, [r2, #12]
 	str	r0, [r2, #4]
 	str	r1, [r2, #16]
-	ldr	r2, .L216+16
+	ldr	r2, .L217+16
 	pop	{r4, r5, r6, lr}
 	stmib	r2, {r0, r3}
 	str	r3, [r2, #12]
 	str	r1, [r2, #16]
 	str	ip, [r2]
 	bx	lr
-.L217:
+.L218:
 	.align	2
-.L216:
+.L217:
 	.word	life1
 	.word	life2
 	.word	life3
@@ -1201,55 +1219,55 @@ updateLives:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
 	@ link register save eliminated.
-	ldr	r3, .L225
+	ldr	r3, .L226
 	ldr	r3, [r3]
 	cmp	r3, #5
-	beq	.L224
+	beq	.L225
 	cmp	r3, #4
-	bne	.L221
-	mov	r0, #0
-	mov	r2, #1
-	ldr	r1, .L225+4
-	ldr	r3, .L225+8
-	str	r0, [r1, #16]
-	str	r2, [r3, #16]
-	bx	lr
-.L221:
-	cmp	r3, #3
 	bne	.L222
 	mov	r0, #0
 	mov	r2, #1
-	ldr	r1, .L225+8
-	ldr	r3, .L225+12
+	ldr	r1, .L226+4
+	ldr	r3, .L226+8
+	str	r0, [r1, #16]
+	str	r2, [r3, #16]
+	bx	lr
+.L222:
+	cmp	r3, #3
+	bne	.L223
+	mov	r0, #0
+	mov	r2, #1
+	ldr	r1, .L226+8
+	ldr	r3, .L226+12
+	str	r0, [r1, #16]
+	str	r2, [r3, #16]
+	bx	lr
+.L225:
+	mov	r2, #1
+	ldr	r3, .L226+4
+	str	r2, [r3, #16]
+	bx	lr
+.L223:
+	cmp	r3, #2
+	bne	.L224
+	mov	r0, #0
+	mov	r2, #1
+	ldr	r1, .L226+12
+	ldr	r3, .L226+16
 	str	r0, [r1, #16]
 	str	r2, [r3, #16]
 	bx	lr
 .L224:
-	mov	r2, #1
-	ldr	r3, .L225+4
-	str	r2, [r3, #16]
-	bx	lr
-.L222:
-	cmp	r3, #2
-	bne	.L223
-	mov	r0, #0
-	mov	r2, #1
-	ldr	r1, .L225+12
-	ldr	r3, .L225+16
-	str	r0, [r1, #16]
-	str	r2, [r3, #16]
-	bx	lr
-.L223:
 	cmp	r3, #1
 	moveq	r0, #0
-	ldreq	r1, .L225+16
-	ldreq	r2, .L225+20
+	ldreq	r1, .L226+16
+	ldreq	r2, .L226+20
 	streq	r0, [r1, #16]
 	streq	r3, [r2, #16]
 	bx	lr
-.L226:
+.L227:
 	.align	2
-.L225:
+.L226:
 	.word	livesRemaining
 	.word	life5
 	.word	life4
@@ -1268,20 +1286,20 @@ drawLives:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
 	@ link register save eliminated.
-	ldr	r3, .L238
+	ldr	r3, .L239
 	ldr	r2, [r3, #16]
 	cmp	r2, #0
-	beq	.L228
+	beq	.L229
 	mov	r1, #34
 	ldr	r2, [r3]
 	ldr	r0, [r3, #4]
-	ldr	r3, .L238+4
+	ldr	r3, .L239+4
 	orr	r2, r2, #16384
 	strh	r2, [r3, #162]	@ movhi
 	strh	r0, [r3, #160]	@ movhi
 	strh	r1, [r3, #164]	@ movhi
-.L229:
-	ldr	r2, .L238+8
+.L230:
+	ldr	r2, .L239+8
 	ldr	r1, [r2, #16]
 	cmp	r1, #0
 	moveq	r2, #512
@@ -1290,7 +1308,7 @@ drawLives:
 	orrne	r2, r1, #16384
 	strhne	r2, [r3, #154]	@ movhi
 	strheq	r2, [r3, #152]	@ movhi
-	ldr	r2, .L238+12
+	ldr	r2, .L239+12
 	ldr	r1, [r2, #16]
 	strhne	ip, [r3, #152]	@ movhi
 	strhne	r0, [r3, #156]	@ movhi
@@ -1301,7 +1319,7 @@ drawLives:
 	orrne	r2, r1, #16384
 	strhne	r2, [r3, #146]	@ movhi
 	strheq	r2, [r3, #144]	@ movhi
-	ldr	r2, .L238+16
+	ldr	r2, .L239+16
 	ldr	r1, [r2, #16]
 	strhne	ip, [r3, #144]	@ movhi
 	strhne	r0, [r3, #148]	@ movhi
@@ -1312,7 +1330,7 @@ drawLives:
 	orrne	r2, r1, #16384
 	strhne	r2, [r3, #138]	@ movhi
 	strheq	r2, [r3, #136]	@ movhi
-	ldr	r2, .L238+20
+	ldr	r2, .L239+20
 	ldr	r1, [r2, #16]
 	strhne	ip, [r3, #136]	@ movhi
 	strhne	r0, [r3, #140]	@ movhi
@@ -1326,14 +1344,14 @@ drawLives:
 	strhne	r0, [r3, #132]	@ movhi
 	strheq	r2, [r3, #128]	@ movhi
 	bx	lr
-.L228:
+.L229:
 	mov	r2, #512
-	ldr	r3, .L238+4
+	ldr	r3, .L239+4
 	strh	r2, [r3, #160]	@ movhi
-	b	.L229
-.L239:
+	b	.L230
+.L240:
 	.align	2
-.L238:
+.L239:
 	.word	life1
 	.word	shadowOAM
 	.word	life2
@@ -1365,70 +1383,70 @@ initEnemyLives:
 	mov	r4, #190
 	mov	lr, #200
 	mov	ip, #210
-	ldr	r0, .L242
+	ldr	r0, .L243
 	str	r3, [r0, #8]
 	str	fp, [r0]
 	str	r3, [r0, #12]
 	str	r1, [r0, #4]
 	str	r2, [r0, #16]
-	ldr	r0, .L242+4
+	ldr	r0, .L243+4
 	str	r3, [r0, #8]
 	str	r10, [r0]
 	str	r3, [r0, #12]
 	str	r1, [r0, #4]
 	str	r2, [r0, #16]
-	ldr	r0, .L242+8
+	ldr	r0, .L243+8
 	str	r3, [r0, #8]
 	str	r9, [r0]
 	str	r3, [r0, #12]
 	str	r1, [r0, #4]
 	str	r2, [r0, #16]
-	ldr	r0, .L242+12
+	ldr	r0, .L243+12
 	str	r3, [r0, #8]
 	str	r8, [r0]
 	str	r3, [r0, #12]
 	str	r1, [r0, #4]
 	str	r2, [r0, #16]
-	ldr	r0, .L242+16
+	ldr	r0, .L243+16
 	str	r3, [r0, #8]
 	str	r7, [r0]
 	str	r3, [r0, #12]
 	str	r1, [r0, #4]
 	str	r2, [r0, #16]
-	ldr	r0, .L242+20
+	ldr	r0, .L243+20
 	str	r3, [r0, #8]
 	str	r6, [r0]
 	str	r3, [r0, #12]
 	str	r1, [r0, #4]
 	str	r2, [r0, #16]
-	ldr	r0, .L242+24
+	ldr	r0, .L243+24
 	str	r3, [r0, #8]
 	str	r3, [r0, #12]
 	str	r5, [r0]
 	str	r1, [r0, #4]
 	str	r2, [r0, #16]
-	ldr	r0, .L242+28
+	ldr	r0, .L243+28
 	str	r4, [r0]
 	str	r3, [r0, #8]
 	str	r3, [r0, #12]
 	str	r1, [r0, #4]
 	str	r2, [r0, #16]
-	ldr	r0, .L242+32
+	ldr	r0, .L243+32
 	str	lr, [r0]
 	str	r3, [r0, #8]
 	str	r3, [r0, #12]
 	str	r1, [r0, #4]
 	str	r2, [r0, #16]
-	ldr	r0, .L242+36
+	ldr	r0, .L243+36
 	pop	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
 	stmib	r0, {r1, r3}
 	str	r3, [r0, #12]
 	str	r2, [r0, #16]
 	str	ip, [r0]
 	bx	lr
-.L243:
+.L244:
 	.align	2
-.L242:
+.L243:
 	.word	eLife1
 	.word	eLife2
 	.word	eLife3
@@ -1451,7 +1469,7 @@ initGame:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
 	push	{r4, r5, r6, r7, r8, lr}
-	ldr	r3, .L246
+	ldr	r3, .L247
 	mov	lr, pc
 	bx	r3
 	mov	r3, #16
@@ -1463,10 +1481,10 @@ initGame:
 	mov	r7, #10
 	mov	r6, #20
 	mov	r5, #200
-	ldr	r2, .L246+4
+	ldr	r2, .L247+4
 	str	r3, [r2, #16]
 	str	r3, [r2, #20]
-	ldr	r3, .L246+8
+	ldr	r3, .L247+8
 	str	r7, [r2]
 	str	r6, [r2, #24]
 	str	r0, [r2, #8]
@@ -1487,21 +1505,21 @@ initGame:
 	bl	initMemoryBalls
 	bl	initLives
 	bl	initEnemyLives
-	ldr	r3, .L246+12
-	ldr	ip, .L246+16
+	ldr	r3, .L247+12
+	ldr	ip, .L247+16
 	ldrh	r0, [r3, #48]
-	ldr	r1, .L246+20
-	ldr	r2, .L246+24
-	ldr	r3, .L246+28
+	ldr	r1, .L247+20
+	ldr	r2, .L247+24
+	ldr	r3, .L247+28
 	strh	r4, [ip]	@ movhi
 	strh	r4, [r2]	@ movhi
 	str	r4, [r3]
 	strh	r0, [r1]	@ movhi
 	pop	{r4, r5, r6, r7, r8, lr}
 	bx	lr
-.L247:
+.L248:
 	.align	2
-.L246:
+.L247:
 	.word	hideSprites
 	.word	player
 	.word	depression
@@ -1522,78 +1540,78 @@ updateEnemyLives:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
 	@ link register save eliminated.
-	ldr	r3, .L260
+	ldr	r3, .L261
 	ldr	r3, [r3]
 	cmp	r3, #9
-	beq	.L259
+	beq	.L260
 	cmp	r3, #8
-	bne	.L251
-	mov	r2, #0
-	ldr	r3, .L260+4
-	str	r2, [r3, #16]
-	bx	lr
-.L251:
-	cmp	r3, #7
 	bne	.L252
 	mov	r2, #0
-	ldr	r3, .L260+8
-	str	r2, [r3, #16]
-	bx	lr
-.L259:
-	mov	r2, #0
-	ldr	r3, .L260+12
+	ldr	r3, .L261+4
 	str	r2, [r3, #16]
 	bx	lr
 .L252:
-	cmp	r3, #6
-	bne	.L254
-	mov	r2, #0
-	ldr	r3, .L260+16
-	str	r2, [r3, #16]
-	bx	lr
-.L254:
-	cmp	r3, #5
-	bne	.L250
-	mov	r2, #0
-	ldr	r3, .L260+20
-	str	r2, [r3, #16]
-	bx	lr
-.L250:
-	cmp	r3, #4
+	cmp	r3, #7
 	bne	.L253
 	mov	r2, #0
-	ldr	r3, .L260+24
+	ldr	r3, .L261+8
+	str	r2, [r3, #16]
+	bx	lr
+.L260:
+	mov	r2, #0
+	ldr	r3, .L261+12
 	str	r2, [r3, #16]
 	bx	lr
 .L253:
-	cmp	r3, #3
+	cmp	r3, #6
 	bne	.L255
 	mov	r2, #0
-	ldr	r3, .L260+28
+	ldr	r3, .L261+16
 	str	r2, [r3, #16]
 	bx	lr
 .L255:
-	cmp	r3, #2
-	bne	.L258
+	cmp	r3, #5
+	bne	.L251
 	mov	r2, #0
-	ldr	r3, .L260+32
+	ldr	r3, .L261+20
 	str	r2, [r3, #16]
 	bx	lr
-.L258:
-	cmp	r3, #1
+.L251:
+	cmp	r3, #4
+	bne	.L254
+	mov	r2, #0
+	ldr	r3, .L261+24
+	str	r2, [r3, #16]
+	bx	lr
+.L254:
+	cmp	r3, #3
 	bne	.L256
 	mov	r2, #0
-	ldr	r3, .L260+36
+	ldr	r3, .L261+28
 	str	r2, [r3, #16]
 	bx	lr
 .L256:
+	cmp	r3, #2
+	bne	.L259
+	mov	r2, #0
+	ldr	r3, .L261+32
+	str	r2, [r3, #16]
+	bx	lr
+.L259:
+	cmp	r3, #1
+	bne	.L257
+	mov	r2, #0
+	ldr	r3, .L261+36
+	str	r2, [r3, #16]
+	bx	lr
+.L257:
 	cmp	r3, #0
-	ldreq	r2, .L260+40
+	ldreq	r2, .L261+40
 	streq	r3, [r2, #16]
 	bx	lr
-.L261:
+.L262:
 	.align	2
-.L260:
+.L261:
 	.word	depressionLivesRemaining
 	.word	eLife9
 	.word	eLife8
@@ -1617,8 +1635,8 @@ updateGame:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
 	mov	r0, #67108864
-	ldr	r1, .L287
-	ldr	r3, .L287+4
+	ldr	r1, .L288
+	ldr	r3, .L288+4
 	ldr	r2, [r1]
 	ldrh	ip, [r3]
 	add	r2, r2, #1
@@ -1626,7 +1644,7 @@ updateGame:
 	str	r2, [r1]
 	strh	ip, [r0, #16]	@ movhi
 	ldrh	r2, [r3]
-	ldr	r1, .L287+8
+	ldr	r1, .L288+8
 	add	r2, r2, #1
 	strh	r2, [r3]	@ movhi
 	mov	lr, pc
@@ -1642,9 +1660,9 @@ updateGame:
 	bl	updateMiniDepressions
 	bl	updateMiniDepressions
 	mov	ip, #0
-	ldr	r3, .L287+12
+	ldr	r3, .L288+12
 	add	r1, r3, #1200
-.L265:
+.L266:
 	ldr	r2, [r3, #32]
 	cmp	r2, #0
 	ldrne	r0, [r3, #20]
@@ -1656,10 +1674,10 @@ updateGame:
 	streq	ip, [r3, #32]
 	add	r3, r3, #40
 	cmp	r1, r3
-	bne	.L265
-	ldr	r3, .L287+16
+	bne	.L266
+	ldr	r3, .L288+16
 	add	r1, r3, #800
-.L268:
+.L269:
 	ldr	r2, [r3, #32]
 	cmp	r2, #0
 	ldrne	r0, [r3, #16]
@@ -1671,9 +1689,9 @@ updateGame:
 	streq	r2, [r3, #32]
 	add	r3, r3, #40
 	cmp	r3, r1
-	bne	.L268
-	ldr	r4, .L287+20
-	ldr	r2, .L287+24
+	bne	.L269
+	ldr	r4, .L288+20
+	ldr	r2, .L288+24
 	ldr	r3, [r4, #24]
 	smull	r0, r1, r3, r2
 	asr	r2, r3, #31
@@ -1682,13 +1700,13 @@ updateGame:
 	rsb	r2, r2, r2, lsl #4
 	cmp	r3, r2, lsl #1
 	addne	r3, r3, #1
-	bne	.L270
+	bne	.L271
 	ldr	r3, [r4, #28]
 	cmp	r3, #0
-	bne	.L286
-.L271:
+	bne	.L287
+.L272:
 	mov	r3, #1
-.L270:
+.L271:
 	str	r3, [r4, #24]
 	mov	r4, #10
 	bl	updateLives
@@ -1696,19 +1714,19 @@ updateGame:
 	bl	updateLives
 	bl	updateLives
 	bl	updateLives
-.L272:
+.L273:
 	bl	updateEnemyLives
 	subs	r4, r4, #1
-	bne	.L272
+	bne	.L273
 	pop	{r4, lr}
 	bx	lr
-.L286:
+.L287:
 	mov	r0, r4
 	bl	fireBadBullets.part.2
-	b	.L271
-.L288:
+	b	.L272
+.L289:
 	.align	2
-.L287:
+.L288:
 	.word	frameCounter
 	.word	hOff
 	.word	waitForVBlank
@@ -1728,216 +1746,216 @@ drawEnemyLives:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
 	@ link register save eliminated.
-	ldr	r3, .L319
+	ldr	r3, .L320
 	ldr	r2, [r3, #16]
 	cmp	r2, #0
-	beq	.L290
+	beq	.L291
 	mov	r1, #36
 	ldr	r2, [r3]
 	ldr	r0, [r3, #4]
-	ldr	r3, .L319+4
+	ldr	r3, .L320+4
 	orr	r2, r2, #16384
 	strh	r2, [r3, #2]	@ movhi
 	strh	r0, [r3]	@ movhi
 	strh	r1, [r3, #4]	@ movhi
-	ldr	r3, .L319+8
+	ldr	r3, .L320+8
 	ldr	r2, [r3, #16]
 	cmp	r2, #0
-	beq	.L292
-.L311:
-	mov	r1, #36
-	ldr	r2, [r3]
-	ldr	r0, [r3, #4]
-	ldr	r3, .L319+12
-	orr	r2, r2, #16384
-	strh	r2, [r3, #2]	@ movhi
-	strh	r0, [r3]	@ movhi
-	strh	r1, [r3, #4]	@ movhi
-	ldr	r3, .L319+16
-	ldr	r2, [r3, #16]
-	cmp	r2, #0
-	beq	.L294
+	beq	.L293
 .L312:
 	mov	r1, #36
 	ldr	r2, [r3]
 	ldr	r0, [r3, #4]
-	ldr	r3, .L319+20
+	ldr	r3, .L320+12
 	orr	r2, r2, #16384
 	strh	r2, [r3, #2]	@ movhi
 	strh	r0, [r3]	@ movhi
 	strh	r1, [r3, #4]	@ movhi
-	ldr	r3, .L319+24
+	ldr	r3, .L320+16
 	ldr	r2, [r3, #16]
 	cmp	r2, #0
-	beq	.L296
+	beq	.L295
 .L313:
 	mov	r1, #36
 	ldr	r2, [r3]
 	ldr	r0, [r3, #4]
-	ldr	r3, .L319+28
+	ldr	r3, .L320+20
 	orr	r2, r2, #16384
 	strh	r2, [r3, #2]	@ movhi
 	strh	r0, [r3]	@ movhi
 	strh	r1, [r3, #4]	@ movhi
-	ldr	r3, .L319+32
+	ldr	r3, .L320+24
 	ldr	r2, [r3, #16]
 	cmp	r2, #0
-	beq	.L298
+	beq	.L297
 .L314:
 	mov	r1, #36
 	ldr	r2, [r3]
 	ldr	r0, [r3, #4]
-	ldr	r3, .L319+36
+	ldr	r3, .L320+28
 	orr	r2, r2, #16384
 	strh	r2, [r3, #2]	@ movhi
 	strh	r0, [r3]	@ movhi
 	strh	r1, [r3, #4]	@ movhi
-	ldr	r3, .L319+40
+	ldr	r3, .L320+32
 	ldr	r2, [r3, #16]
 	cmp	r2, #0
-	beq	.L300
+	beq	.L299
 .L315:
 	mov	r1, #36
 	ldr	r2, [r3]
 	ldr	r0, [r3, #4]
-	ldr	r3, .L319+44
+	ldr	r3, .L320+36
 	orr	r2, r2, #16384
 	strh	r2, [r3, #2]	@ movhi
 	strh	r0, [r3]	@ movhi
 	strh	r1, [r3, #4]	@ movhi
-	ldr	r3, .L319+48
+	ldr	r3, .L320+40
 	ldr	r2, [r3, #16]
 	cmp	r2, #0
-	beq	.L302
+	beq	.L301
 .L316:
 	mov	r1, #36
 	ldr	r2, [r3]
 	ldr	r0, [r3, #4]
-	ldr	r3, .L319+52
+	ldr	r3, .L320+44
 	orr	r2, r2, #16384
 	strh	r2, [r3, #2]	@ movhi
 	strh	r0, [r3]	@ movhi
 	strh	r1, [r3, #4]	@ movhi
-	ldr	r3, .L319+56
+	ldr	r3, .L320+48
 	ldr	r2, [r3, #16]
 	cmp	r2, #0
-	beq	.L304
+	beq	.L303
 .L317:
 	mov	r1, #36
 	ldr	r2, [r3]
 	ldr	r0, [r3, #4]
-	ldr	r3, .L319+60
+	ldr	r3, .L320+52
 	orr	r2, r2, #16384
 	strh	r2, [r3, #2]	@ movhi
 	strh	r0, [r3]	@ movhi
 	strh	r1, [r3, #4]	@ movhi
-	ldr	r3, .L319+64
+	ldr	r3, .L320+56
 	ldr	r2, [r3, #16]
 	cmp	r2, #0
-	beq	.L306
+	beq	.L305
 .L318:
 	mov	r1, #36
 	ldr	r2, [r3]
 	ldr	r0, [r3, #4]
-	ldr	r3, .L319+68
+	ldr	r3, .L320+60
 	orr	r2, r2, #16384
 	strh	r2, [r3, #2]	@ movhi
 	strh	r0, [r3]	@ movhi
 	strh	r1, [r3, #4]	@ movhi
-	ldr	r3, .L319+72
+	ldr	r3, .L320+64
 	ldr	r2, [r3, #16]
 	cmp	r2, #0
-	bne	.L310
-.L308:
-	mov	r2, #512
-	ldr	r3, .L319+76
-	strh	r2, [r3]	@ movhi
-	bx	lr
-.L290:
-	mov	r2, #512
-	ldr	r3, .L319+4
-	strh	r2, [r3]	@ movhi
-	ldr	r3, .L319+8
-	ldr	r2, [r3, #16]
-	cmp	r2, #0
-	bne	.L311
-.L292:
-	mov	r2, #512
-	ldr	r3, .L319+12
-	strh	r2, [r3]	@ movhi
-	ldr	r3, .L319+16
-	ldr	r2, [r3, #16]
-	cmp	r2, #0
-	bne	.L312
-.L294:
-	mov	r2, #512
-	ldr	r3, .L319+20
-	strh	r2, [r3]	@ movhi
-	ldr	r3, .L319+24
-	ldr	r2, [r3, #16]
-	cmp	r2, #0
-	bne	.L313
-.L296:
-	mov	r2, #512
-	ldr	r3, .L319+28
-	strh	r2, [r3]	@ movhi
-	ldr	r3, .L319+32
-	ldr	r2, [r3, #16]
-	cmp	r2, #0
-	bne	.L314
-.L298:
-	mov	r2, #512
-	ldr	r3, .L319+36
-	strh	r2, [r3]	@ movhi
-	ldr	r3, .L319+40
-	ldr	r2, [r3, #16]
-	cmp	r2, #0
-	bne	.L315
-.L300:
-	mov	r2, #512
-	ldr	r3, .L319+44
-	strh	r2, [r3]	@ movhi
-	ldr	r3, .L319+48
-	ldr	r2, [r3, #16]
-	cmp	r2, #0
-	bne	.L316
-.L302:
-	mov	r2, #512
-	ldr	r3, .L319+52
-	strh	r2, [r3]	@ movhi
-	ldr	r3, .L319+56
-	ldr	r2, [r3, #16]
-	cmp	r2, #0
-	bne	.L317
-.L304:
-	mov	r2, #512
-	ldr	r3, .L319+60
-	strh	r2, [r3]	@ movhi
-	ldr	r3, .L319+64
-	ldr	r2, [r3, #16]
-	cmp	r2, #0
-	bne	.L318
-.L306:
-	mov	r2, #512
-	ldr	r3, .L319+68
-	strh	r2, [r3]	@ movhi
-	ldr	r3, .L319+72
-	ldr	r2, [r3, #16]
-	cmp	r2, #0
-	beq	.L308
-.L310:
+	beq	.L307
+.L319:
 	mov	r1, #36
 	ldr	r2, [r3]
 	ldr	r0, [r3, #4]
-	ldr	r3, .L319+76
+	ldr	r3, .L320+68
+	orr	r2, r2, #16384
+	strh	r2, [r3, #2]	@ movhi
+	strh	r0, [r3]	@ movhi
+	strh	r1, [r3, #4]	@ movhi
+	ldr	r3, .L320+72
+	ldr	r2, [r3, #16]
+	cmp	r2, #0
+	bne	.L311
+.L309:
+	mov	r2, #512
+	ldr	r3, .L320+76
+	strh	r2, [r3]	@ movhi
+	bx	lr
+.L291:
+	mov	r2, #512
+	ldr	r3, .L320+4
+	strh	r2, [r3]	@ movhi
+	ldr	r3, .L320+8
+	ldr	r2, [r3, #16]
+	cmp	r2, #0
+	bne	.L312
+.L293:
+	mov	r2, #512
+	ldr	r3, .L320+12
+	strh	r2, [r3]	@ movhi
+	ldr	r3, .L320+16
+	ldr	r2, [r3, #16]
+	cmp	r2, #0
+	bne	.L313
+.L295:
+	mov	r2, #512
+	ldr	r3, .L320+20
+	strh	r2, [r3]	@ movhi
+	ldr	r3, .L320+24
+	ldr	r2, [r3, #16]
+	cmp	r2, #0
+	bne	.L314
+.L297:
+	mov	r2, #512
+	ldr	r3, .L320+28
+	strh	r2, [r3]	@ movhi
+	ldr	r3, .L320+32
+	ldr	r2, [r3, #16]
+	cmp	r2, #0
+	bne	.L315
+.L299:
+	mov	r2, #512
+	ldr	r3, .L320+36
+	strh	r2, [r3]	@ movhi
+	ldr	r3, .L320+40
+	ldr	r2, [r3, #16]
+	cmp	r2, #0
+	bne	.L316
+.L301:
+	mov	r2, #512
+	ldr	r3, .L320+44
+	strh	r2, [r3]	@ movhi
+	ldr	r3, .L320+48
+	ldr	r2, [r3, #16]
+	cmp	r2, #0
+	bne	.L317
+.L303:
+	mov	r2, #512
+	ldr	r3, .L320+52
+	strh	r2, [r3]	@ movhi
+	ldr	r3, .L320+56
+	ldr	r2, [r3, #16]
+	cmp	r2, #0
+	bne	.L318
+.L305:
+	mov	r2, #512
+	ldr	r3, .L320+60
+	strh	r2, [r3]	@ movhi
+	ldr	r3, .L320+64
+	ldr	r2, [r3, #16]
+	cmp	r2, #0
+	bne	.L319
+.L307:
+	mov	r2, #512
+	ldr	r3, .L320+68
+	strh	r2, [r3]	@ movhi
+	ldr	r3, .L320+72
+	ldr	r2, [r3, #16]
+	cmp	r2, #0
+	beq	.L309
+.L311:
+	mov	r1, #36
+	ldr	r2, [r3]
+	ldr	r0, [r3, #4]
+	ldr	r3, .L320+76
 	orr	r2, r2, #16384
 	strh	r2, [r3, #2]	@ movhi
 	strh	r0, [r3]	@ movhi
 	strh	r1, [r3, #4]	@ movhi
 	bx	lr
-.L320:
+.L321:
 	.align	2
-.L319:
+.L320:
 	.word	eLife1
 	.word	shadowOAM+480
 	.word	eLife2
@@ -1969,110 +1987,97 @@ drawGame:
 	@ Function supports interworking.
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
-	ldr	r1, .L335
+	ldr	r1, .L334
 	ldr	r3, [r1]
 	mvn	r3, r3, lsl #17
 	mvn	r3, r3, lsr #17
-	mov	ip, #122
+	mov	r0, #122
 	push	{r4, r5, r6, lr}
 	mov	r6, #512
-	mov	r5, #60
-	ldr	lr, [r1, #4]
-	ldr	r2, .L335+4
-	ldr	r1, .L335+8
-	strh	r3, [r1, #202]	@ movhi
+	mov	r4, #60
+	ldr	r5, .L334+4
+	ldr	r2, .L334+8
+	strh	r3, [r5, #202]	@ movhi
 	ldr	r3, [r2]
-	ldr	r0, [r2, #4]
+	ldr	ip, [r1, #4]
+	ldr	r1, [r2, #4]
 	ldr	r2, [r2, #28]
 	orr	r3, r3, #16384
-	orr	r0, r0, #1024
+	orr	r1, r1, #1024
 	lsl	r2, r2, #5
-	strh	r3, [r1, #2]	@ movhi
-	ldr	r3, .L335+12
-	strh	r0, [r1]	@ movhi
-	strh	r2, [r1, #4]	@ movhi
-	strh	ip, [r1, #204]	@ movhi
-	strh	lr, [r1, #200]	@ movhi
-	add	lr, r3, #288
-.L324:
+	strh	r3, [r5, #2]	@ movhi
+	ldr	r3, .L334+12
+	strh	r1, [r5]	@ movhi
+	strh	r2, [r5, #4]	@ movhi
+	strh	r0, [r5, #204]	@ movhi
+	strh	ip, [r5, #200]	@ movhi
+	add	ip, r3, #288
+.L325:
 	ldr	r2, [r3, #28]
 	cmp	r2, #0
 	ldr	r2, [r3, #32]
-	lsl	r0, r2, #3
-	ldmne	r3, {r2, r4}
-	add	ip, r1, r0
+	lsl	r1, r2, #3
+	ldmne	r3, {r2, lr}
+	add	r0, r5, r1
 	orrne	r2, r2, #16384
 	lsleq	r2, r2, #3
 	add	r3, r3, #36
-	strhne	r5, [ip, #4]	@ movhi
-	strhne	r2, [ip, #2]	@ movhi
-	strhne	r4, [r1, r0]	@ movhi
-	strheq	r6, [r1, r2]	@ movhi
-	cmp	r3, lr
-	bne	.L324
-	mov	r4, #512
-	mov	r6, #54
-	ldr	r3, .L335+16
-	add	ip, r3, #1200
-.L327:
-	ldr	r2, [r3, #32]
-	cmp	r2, #0
-	ldr	r2, [r3, #36]
-	ldrne	r0, [r3]
-	lslne	r2, r2, #3
-	ldrne	r5, [r3, #4]
-	addne	lr, r1, r2
-	orrne	r0, r0, #16384
-	lsleq	r2, r2, #3
-	add	r3, r3, #40
-	strhne	r5, [r1, r2]	@ movhi
-	strhne	r6, [lr, #4]	@ movhi
-	strhne	r0, [lr, #2]	@ movhi
-	strheq	r4, [r1, r2]	@ movhi
+	strhne	r4, [r0, #4]	@ movhi
+	strhne	r2, [r0, #2]	@ movhi
+	strhne	lr, [r5, r1]	@ movhi
+	strheq	r6, [r5, r2]	@ movhi
 	cmp	r3, ip
-	bne	.L327
-	mov	r4, #512
+	bne	.L325
+	ldr	r4, .L334+16
+	add	r6, r4, #1200
+.L326:
+	mov	r0, r4
+	add	r4, r4, #40
+	bl	drawPlayerBullets
+	cmp	r4, r6
+	bne	.L326
+	mov	lr, #512
 	mov	r6, #56
-	ldr	r3, .L335+20
-	add	ip, r3, #800
-.L330:
+	ldr	r3, .L334+20
+	add	r0, r3, #800
+.L329:
 	ldr	r2, [r3, #32]
 	cmp	r2, #0
 	ldr	r2, [r3, #36]
-	ldrne	r0, [r3]
+	ldrne	r1, [r3]
 	lslne	r2, r2, #3
-	ldrne	r5, [r3, #4]
-	addne	lr, r1, r2
-	orrne	r0, r0, #16384
+	ldrne	r4, [r3, #4]
+	addne	ip, r5, r2
+	orrne	r1, r1, #16384
 	lsleq	r2, r2, #3
 	add	r3, r3, #40
-	strhne	r5, [r1, r2]	@ movhi
-	strhne	r6, [lr, #4]	@ movhi
-	strhne	r0, [lr, #2]	@ movhi
-	strheq	r4, [r1, r2]	@ movhi
-	cmp	r3, ip
-	bne	.L330
+	strhne	r4, [r5, r2]	@ movhi
+	strhne	r6, [ip, #4]	@ movhi
+	strhne	r1, [ip, #2]	@ movhi
+	strheq	lr, [r5, r2]	@ movhi
+	cmp	r3, r0
+	bne	.L329
 	bl	drawMemoryBalls
 	bl	drawLives
 	bl	drawEnemyLives
-	ldr	r3, .L335+24
+	ldr	r3, .L334+24
 	mov	lr, pc
 	bx	r3
-	ldr	r4, .L335+28
+	ldr	r4, .L334+28
 	mov	r3, #512
 	mov	r2, #117440512
-	ldr	r1, .L335+8
+	ldr	r1, .L334+4
 	mov	r0, #3
 	mov	lr, pc
 	bx	r4
 	pop	{r4, r5, r6, lr}
 	bx	lr
-.L336:
-	.align	2
 .L335:
+	.align	2
+.L334:
 	.word	depression
-	.word	player
 	.word	shadowOAM
+	.word	player
 	.word	miniDep1
 	.word	b
 	.word	bb
