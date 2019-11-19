@@ -1,3 +1,55 @@
+/** 
+ * TODO: 
+ * Sprite animations for Depression enemy - every time it gets shot, it changes color
+ *      like a thunderstorm cloud does when there's lightning
+ * 
+ * Add sound to the game (winning music, losing music, game music, sound when Joy gets hit by lightning)
+ * 
+ * DONE: 
+ * (Milestone 02)
+ * All states accessible (main menu, instructions, win, lose, pause)
+ * All sprites shown on screen
+ * Ability to win/lose game
+ * Game logic implementation is pretty much done
+ * 
+ * (Milestone 03)
+ * Added ability to see player lives (bottom left) AND enemy lives (top right) remaining on screen
+ * Made updates to Instructions screen to be more clear in what goes on in the game
+ * Parallax in the pause state (thanks for the help, Marie!!) - drew the moving background behind Fear's image
+ * Implemented a cheat - by pressing A on keyboard, player turns into the character Sadness, who is immune to the lightning
+ *      strikes shot by Depression. Sadness is not immune to the mini Depression clouds, though.
+ *      Player can switch back to Joy by pressing S on keyboard.
+ *  
+ * BUGS: 
+ * (Fixed) Player can have 5 lives max. When the player collided with the memory ball while they had 5 lives,
+ * the memory ball was adding lives 2 the player behind the scenes. So even though 5 lives were being displayed
+ * on the screen, the memory balls allowed the player to have 7 lives (since 2 memory balls appear in the game)
+ *      - Now, when the player catches a memory ball while they have 5 lives, that extra possibility for life
+ *        through the memory ball just goes to waste. Player must be careful and only catch memory balls when they
+ *        have less than 5 lives.
+ * 
+ * PLAY: (specified in the Instructions page but will also include here just in case)
+ * Joy's main goal is to defeat Depression by shooting rays of sunshine at it and its mini clouds.
+ * 
+ * Depression has 10 lives, the mini clouds have 1 life, and Joy has 5 lives.
+ * 
+ * Joy loses a life when she gets shot by Depression's lightning bolts or touches a mini cloud.
+ * 
+ * Joy can also only move forward until about half of the screen (to add some difficulty to the game, otherwise it'd be
+ * really easy to kill Depression if Joy gets really close to it)
+ * 
+ * Joy can regain lives if she collects the 2 memory balls on the screen (1 ball = 1 life). Though, note that Joy can 
+ * only have 5 lives max. so these memory balls are there for when she has less than 5 lives. If she takes the memory 
+ * balls while she has 5 lives, they basically go to waste.
+ * 
+ * While in the game state,
+ * Press X to shoot sunshine rays at Depression and the mini clouds.
+ * Press Enter to pause/unpause the game. While in the pause state, you can press Backspace to return to Main Menu.
+ * 
+ * 
+ * **/
+
+
 #include "myLib.h"
 #include "game.h"
 #include "pauseFear.h"

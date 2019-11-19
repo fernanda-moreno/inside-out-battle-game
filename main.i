@@ -2,6 +2,7 @@
 # 1 "<built-in>"
 # 1 "<command-line>"
 # 1 "main.c"
+# 47 "main.c"
 # 1 "myLib.h" 1
 
 
@@ -75,7 +76,7 @@ void DMANow(int channel, volatile const void *src, volatile void *dst, unsigned 
 
 
 int collision(int colA, int rowA, int widthA, int heightA, int colB, int rowB, int widthB, int heightB);
-# 2 "main.c" 2
+# 48 "main.c" 2
 # 1 "game.h" 1
 
 typedef struct {
@@ -86,6 +87,7 @@ typedef struct {
     int width;
     int height;
     int bulletTimer;
+    int aniState;
 
 } PLAYER;
 
@@ -171,7 +173,7 @@ typedef struct {
 extern int livesRemaining;
 extern int enemiesRemaining;
 extern int depressionLivesRemaining;
-# 105 "game.h"
+# 106 "game.h"
 void initGame();
 void updateGame();
 void drawGame();
@@ -213,7 +215,7 @@ void drawLives();
 void initEnemyLives();
 void updateEnemyLives();
 void drawEnemyLives();
-# 3 "main.c" 2
+# 49 "main.c" 2
 # 1 "pauseFear.h" 1
 # 22 "pauseFear.h"
 extern const unsigned short pauseFearTiles[4720];
@@ -223,7 +225,7 @@ extern const unsigned short pauseFearMap[1024];
 
 
 extern const unsigned short pauseFearPal[256];
-# 4 "main.c" 2
+# 50 "main.c" 2
 # 1 "winJoy.h" 1
 # 22 "winJoy.h"
 extern const unsigned short winJoyTiles[5616];
@@ -233,7 +235,7 @@ extern const unsigned short winJoyMap[1024];
 
 
 extern const unsigned short winJoyPal[256];
-# 5 "main.c" 2
+# 51 "main.c" 2
 # 1 "loseSadness.h" 1
 # 22 "loseSadness.h"
 extern const unsigned short loseSadnessTiles[6080];
@@ -243,7 +245,7 @@ extern const unsigned short loseSadnessMap[1024];
 
 
 extern const unsigned short loseSadnessPal[256];
-# 6 "main.c" 2
+# 52 "main.c" 2
 # 1 "insideOutStartBg.h" 1
 # 22 "insideOutStartBg.h"
 extern const unsigned short insideOutStartBgTiles[3264];
@@ -253,17 +255,17 @@ extern const unsigned short insideOutStartBgMap[1024];
 
 
 extern const unsigned short insideOutStartBgPal[256];
-# 7 "main.c" 2
+# 53 "main.c" 2
 # 1 "instructionsBg.h" 1
 # 22 "instructionsBg.h"
-extern const unsigned short instructionsBgTiles[5840];
+extern const unsigned short instructionsBgTiles[5856];
 
 
 extern const unsigned short instructionsBgMap[1024];
 
 
 extern const unsigned short instructionsBgPal[256];
-# 8 "main.c" 2
+# 54 "main.c" 2
 # 1 "skyBg.h" 1
 # 22 "skyBg.h"
 extern const unsigned short skyBgTiles[25536];
@@ -273,14 +275,14 @@ extern const unsigned short skyBgMap[6144];
 
 
 extern const unsigned short skyBgPal[256];
-# 9 "main.c" 2
+# 55 "main.c" 2
 # 1 "spritesheet.h" 1
 # 21 "spritesheet.h"
 extern const unsigned short spritesheetTiles[16384];
 
 
 extern const unsigned short spritesheetPal[256];
-# 10 "main.c" 2
+# 56 "main.c" 2
 # 1 "pauseSky.h" 1
 # 22 "pauseSky.h"
 extern const unsigned short pauseSkyTiles[12768];
@@ -290,7 +292,7 @@ extern const unsigned short pauseSkyMap[2048];
 
 
 extern const unsigned short pauseSkyPal[256];
-# 11 "main.c" 2
+# 57 "main.c" 2
 # 1 "pauseSky-2.h" 1
 # 22 "pauseSky-2.h"
 extern const unsigned short pauseSky_2Tiles[736];
@@ -300,7 +302,7 @@ extern const unsigned short pauseSky_2Map[2048];
 
 
 extern const unsigned short pauseSky_2Pal[256];
-# 12 "main.c" 2
+# 58 "main.c" 2
 
 
 void initialize();
@@ -419,7 +421,7 @@ void instructionsState() {
 void goToInstructions() {
 
     DMANow(3, instructionsBgPal, ((unsigned short *)0x5000000), 512 / 2);
-    DMANow(3, instructionsBgTiles, &((charblock *)0x6000000)[0], 11680 / 2);
+    DMANow(3, instructionsBgTiles, &((charblock *)0x6000000)[0], 11712 / 2);
     DMANow(3, instructionsBgMap, &((screenblock *)0x6000000)[28], 2048 / 2);
     state = INSTRUCTIONS;
 

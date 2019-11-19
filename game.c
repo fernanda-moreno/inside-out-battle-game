@@ -153,6 +153,7 @@ void initPlayer() {
 	player.row = 80;
 	player.col = 10;
     player.bulletTimer = 20;
+	player.aniState = 1;
 }
 
 // Update the player as she moves on the screen and shoots sunshine rays
@@ -180,11 +181,13 @@ void updatePlayer() {
 	player.bulletTimer++;
 
 	// When lightning hits player, player loses a life and lightning disappears
-	for (int i = 0; i < BADBULLETCOUNT; i++) {
-		if (bb[i].active && collision(player.col, player.row, player.width, player.height,
-		bb[i].col, bb[i].row, bb[i].width, bb[i].height)) {
-			livesRemaining--;
-			bb[i].active = 0;
+	if (player.aniState == 1) {
+		for (int i = 0; i < BADBULLETCOUNT; i++) {
+			if (bb[i].active && collision(player.col, player.row, player.width, player.height,
+			bb[i].col, bb[i].row, bb[i].width, bb[i].height)) {
+				livesRemaining--;
+				bb[i].active = 0;
+			}
 		}
 	}
 
@@ -198,68 +201,44 @@ void updatePlayer() {
 		}
 	}
 
-	// When player collides with memory ball, player gains a life
 
-	// if (livesRemaining < 5) {
 
-	// 	if (!(collision(player.col, player.row, player.width, player.height,
-	// 		memball1.col, memball1.row, memball1.width, memball1.height))) {
-
-	// 		memball1.active = 1;
-	// 	} 
+	if (memball1.active){
 		
-	// 	else {
-	// 		memball1.active = 0;
-	// 	}
+		if (collision(player.col, player.row, player.width, player.height,
+		memball1.col, memball1.row, memball1.width, memball1.height)) {
 
-	// 	if (!(collision(player.col, player.row, player.width, player.height,
-	// 		memball2.col, memball2.row, memball2.width, memball2.height))) {
-
-	// 		memball2.active = 1;
-	// 	} 
-		
-	// 	else {
-	// 		memball2.active = 0;
-	// 	}
-	// }
-
-	//for (int i = 0; i < MEMBALLCOUNT; i++) {
-
-
-		if (memball1.active){
-		
-			if (collision(player.col, player.row, player.width, player.height,
-			memball1.col, memball1.row, memball1.width, memball1.height)) {
-
-				if (livesRemaining < 5) {
+			if (livesRemaining < 5) {
 				
-					livesRemaining++;
-				}
-				memball1.active = 0;
-				//player.col -= 10;
-							
-				
-			} 
+				livesRemaining++;
+			}
+			memball1.active = 0;
+			//player.col -= 10;
+		} 
 
-		}
+	}
 
-		if (memball2.active) {
+	if (memball2.active) {
 		
-			if (collision(player.col, player.row, player.width, player.height,
-			memball2.col, memball2.row, memball2.width, memball2.height)) {
-				if (livesRemaining < 5){
-					livesRemaining++;
-				}
-				memball2.active = 0;
-				//player.col -= 10;
-							
-				
-			} 
+		if (collision(player.col, player.row, player.width, player.height,
+		memball2.col, memball2.row, memball2.width, memball2.height)) {
+			if (livesRemaining < 5){
+				livesRemaining++;
+			}
+			memball2.active = 0;
+			//player.col -= 10;
+								
+		} 
 			
-		}
+	}
 
-	//}
+	if (BUTTON_PRESSED(BUTTON_L)) {
+		player.aniState = 3;
+	}
 
+	if (BUTTON_PRESSED(BUTTON_R)) {
+		player.aniState = 1;
+	}
 
 	// If player collides with big Depression enemy, player loses
 	// This isn't possible anymore anyways since the player cannot move past col 90
@@ -275,9 +254,9 @@ void updatePlayer() {
 // Draw the player
 void drawPlayer() {
 
-    shadowOAM[0].attr0 = (player.row) | ATTR0_4BPP | ATTR0_SQUARE;
+    shadowOAM[0].attr0 = (player.row) | ATTR0_4BPP | ATTR0_SQUARE | ATTR0_BLEND;
     shadowOAM[0].attr1 = (player.col) | ATTR1_SMALL;
-    shadowOAM[0].attr2 = ATTR2_TILEID(0, 1) | ATTR2_PALROW(0);
+    shadowOAM[0].attr2 = ATTR2_TILEID(0, player.aniState) | ATTR2_PALROW(0);
 
 
 }

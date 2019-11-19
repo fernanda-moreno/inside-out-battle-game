@@ -173,7 +173,7 @@ goToInstructions:
 .L16:
 	.word	DMANow
 	.word	instructionsBgPal
-	.word	5840
+	.word	5856
 	.word	instructionsBgTiles
 	.word	100720640
 	.word	instructionsBgMap

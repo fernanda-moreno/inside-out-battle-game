@@ -86,6 +86,7 @@ typedef struct {
     int width;
     int height;
     int bulletTimer;
+    int aniState;
 
 } PLAYER;
 
@@ -171,7 +172,7 @@ typedef struct {
 extern int livesRemaining;
 extern int enemiesRemaining;
 extern int depressionLivesRemaining;
-# 105 "game.h"
+# 106 "game.h"
 void initGame();
 void updateGame();
 void drawGame();
@@ -1171,6 +1172,7 @@ void initPlayer() {
  player.row = 80;
  player.col = 10;
     player.bulletTimer = 20;
+ player.aniState = 1;
 }
 
 
@@ -1198,11 +1200,13 @@ void updatePlayer() {
  player.bulletTimer++;
 
 
- for (int i = 0; i < 20; i++) {
-  if (bb[i].active && collision(player.col, player.row, player.width, player.height,
-  bb[i].col, bb[i].row, bb[i].width, bb[i].height)) {
-   livesRemaining--;
-   bb[i].active = 0;
+ if (player.aniState == 1) {
+  for (int i = 0; i < 20; i++) {
+   if (bb[i].active && collision(player.col, player.row, player.width, player.height,
+   bb[i].col, bb[i].row, bb[i].width, bb[i].height)) {
+    livesRemaining--;
+    bb[i].active = 0;
+   }
   }
  }
 
@@ -1215,38 +1219,47 @@ void updatePlayer() {
    player.col -= 10;
   }
  }
-# 229 "game.c"
-  if (memball1.active){
-
-   if (collision(player.col, player.row, player.width, player.height,
-   memball1.col, memball1.row, memball1.width, memball1.height)) {
-
-    if (livesRemaining < 5) {
-
-     livesRemaining++;
-    }
-    memball1.active = 0;
 
 
 
+ if (memball1.active){
+
+  if (collision(player.col, player.row, player.width, player.height,
+  memball1.col, memball1.row, memball1.width, memball1.height)) {
+
+   if (livesRemaining < 5) {
+
+    livesRemaining++;
    }
+   memball1.active = 0;
+
+
 
   }
 
-  if (memball2.active) {
+ }
 
-   if (collision(player.col, player.row, player.width, player.height,
-   memball2.col, memball2.row, memball2.width, memball2.height)) {
-    if (livesRemaining < 5){
-     livesRemaining++;
-    }
-    memball2.active = 0;
+ if (memball2.active) {
 
-
-
+  if (collision(player.col, player.row, player.width, player.height,
+  memball2.col, memball2.row, memball2.width, memball2.height)) {
+   if (livesRemaining < 5){
+    livesRemaining++;
    }
+   memball2.active = 0;
+
 
   }
+
+ }
+
+ if ((!(~(oldButtons)&((1<<9))) && (~buttons & ((1<<9))))) {
+  player.aniState = 3;
+ }
+
+ if ((!(~(oldButtons)&((1<<8))) && (~buttons & ((1<<8))))) {
+  player.aniState = 1;
+ }
 
 
 
@@ -1265,9 +1278,9 @@ void updatePlayer() {
 
 void drawPlayer() {
 
-    shadowOAM[0].attr0 = (player.row) | (0<<13) | (0<<14);
+    shadowOAM[0].attr0 = (player.row) | (0<<13) | (0<<14) | (1<<10);
     shadowOAM[0].attr1 = (player.col) | (1<<14);
-    shadowOAM[0].attr2 = ((1)*32+(0)) | ((0)<<12);
+    shadowOAM[0].attr2 = ((player.aniState)*32+(0)) | ((0)<<12);
 
 
 }
@@ -1511,7 +1524,7 @@ void initMemoryBalls() {
 
 
 void updateMemoryBalls() {
-# 551 "game.c"
+# 535 "game.c"
 }
 
 

@@ -7,6 +7,7 @@ typedef struct {
     int width;
     int height;
     int bulletTimer;
+    int aniState;
 
 } PLAYER;
 

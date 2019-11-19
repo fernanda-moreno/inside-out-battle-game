@@ -899,7 +899,7 @@ instructionsBgMap:
 	.short	362
 	.short	363
 	.short	364
-	.short	2135
+	.short	365
 	.short	0
 	.short	0
 	.short	0
@@ -1301,7 +1301,7 @@ instructionsBgMap:
 	.short	0
 	.short	0
 	.type	instructionsBgTiles, %object
-	.size	instructionsBgTiles, 11680
+	.size	instructionsBgTiles, 11712
 instructionsBgTiles:
 	.short	0
 	.short	0
@@ -4428,7 +4428,7 @@ instructionsBgTiles:
 	.short	0
 	.short	0
 	.short	1365
-	.short	0
+	.short	80
 	.short	0
 	.short	0
 	.short	0
@@ -7131,6 +7131,22 @@ instructionsBgTiles:
 	.short	80
 	.short	20485
 	.short	21760
+	.short	0
+	.short	0
+	.short	0
+	.short	0
+	.short	0
+	.short	0
+	.short	0
+	.short	0
+	.short	0
+	.short	0
+	.short	0
+	.short	0
+	.short	0
+	.short	0
+	.short	1285
+	.short	0
 	.short	0
 	.short	0
 	.short	0
