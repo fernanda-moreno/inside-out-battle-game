@@ -37,6 +37,8 @@ typedef struct {
     int bulletTimer;
     int active;
     int index;
+    int numFrames;
+    int curFrame;
 
 } ENEMY;
 
@@ -67,6 +69,8 @@ typedef struct {
     int height;
     int active;
     int index;
+    int numFrames;
+    int curFrame;
 
 } MEMORYBALL;
 
@@ -144,3 +148,10 @@ void drawLives();
 void initEnemyLives();
 void updateEnemyLives();
 void drawEnemyLives();
+
+void setupInterrupts();
+void setupSounds();
+void stopSound();
+void playSoundA();
+void pauseSound();
+void unpauseSound();

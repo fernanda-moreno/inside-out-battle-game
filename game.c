@@ -1,6 +1,8 @@
 #include "myLib.h"
 #include "game.h"
 #include "skyBg.h"
+#include "sound.h"
+#include "shoot.h"
 #include <stdlib.h>
 
 // Game Structures
@@ -37,6 +39,10 @@ OBJ_ATTR shadowOAM[128];
 
 int frameCounter;
 
+int memballCounter;
+
+int depCounter;
+
 // Horizontal Offset
 unsigned short hOff;
 unsigned short hOff1;
@@ -62,6 +68,8 @@ void initGame() {
 	hOff = 0;
 	hOff1 = 0;
 	frameCounter = 0;
+	memballCounter = 0;
+	depCounter = 0;
 
 }
 
@@ -71,9 +79,7 @@ void updateGame() {
 	frameCounter++;
 	// Scroll the background
 	REG_BG0HOFF = hOff;
-	// REG_BG1HOFF = hOff1;
 	hOff++;
-	// hOff1++;
 
 
     waitForVBlank();
@@ -93,7 +99,7 @@ void updateGame() {
         updateBadBullets(&bb[i]);
     }
 
-    if (depression.bulletTimer % 30 == 0) {
+    if (depression.bulletTimer == 30) {
 		fireBadBullets(&depression);
 		depression.bulletTimer = 0;
 	}
@@ -104,6 +110,7 @@ void updateGame() {
 		updateMemoryBalls();
 
 	}
+	// updateMemoryBalls();
 
 
 	for(int i = 0; i < LIFECOUNT; i++) {
@@ -165,7 +172,7 @@ void updatePlayer() {
 	}
 
 	// Player cannot move forward after a certain point on the screen (adds some difficulty to the game)
-	if (BUTTON_HELD(BUTTON_RIGHT) && player.col < 90) {
+	if (BUTTON_HELD(BUTTON_RIGHT) && player.col < ((SCREENWIDTH/2) - player.width)) {
 		player.col += player.cDel;
 	}
 	if (BUTTON_HELD(BUTTON_UP) && player.row > 10) {
@@ -216,7 +223,6 @@ void updatePlayer() {
 				livesRemaining++;
 			}
 			memball1.active = 0;
-			//player.col -= 10;
 		} 
 
 	}
@@ -229,19 +235,22 @@ void updatePlayer() {
 				livesRemaining++;
 			}
 			memball2.active = 0;
-			//player.col -= 10;
 								
 		} 
 			
 	}
 
-	if (BUTTON_PRESSED(BUTTON_L)) {
-		player.aniState = 3;
+	if (player.aniState == 1) {
+		if (BUTTON_PRESSED(BUTTON_L)) {
+			player.aniState = 3;
+				
+		}
+	} else {
+		if (BUTTON_PRESSED(BUTTON_L)) {
+			player.aniState = 1;
+		}
 	}
 
-	if (BUTTON_PRESSED(BUTTON_R)) {
-		player.aniState = 1;
-	}
 
 	// If player collides with big Depression enemy, player loses
 	// This isn't possible anymore anyways since the player cannot move past col 90
@@ -274,6 +283,8 @@ void initDepression() {
 	depression.col = 200;
 	depression.active = 1;
     depression.bulletTimer = 0;
+	depression.numFrames = 4;
+	depression.curFrame = 1;
 
 }
 
@@ -295,12 +306,25 @@ void updateDepression() {
 	for (int i = 0; i < PLAYERBULLETCOUNT; i++) {
 		if (depression.active && b[i].active && collision(depression.col, depression.row, depression.width, depression.height,
 		b[i].col, b[i].row, b[i].width,b[i].height)) {
+			depression.curFrame = 9;
+			playSoundB(shoot, SHOOTLEN, SHOOTFREQ, 0);
 			b[i].active = 0;
 			depressionLivesRemaining--;
 			if (depressionLivesRemaining == 0) {
 				depression.active = 0;
 			}
 		}
+	}
+
+	depCounter++;
+	if (depCounter == 30) {
+			
+		if(depression.curFrame <= (depression.numFrames)) {
+			depression.curFrame += 4;
+		} else {
+			depression.curFrame = 1;
+		}
+		depCounter = 0;
 	}
 
 }
@@ -310,7 +334,7 @@ void drawDepression() {
 
 	shadowOAM[25].attr0 = (depression.row) | ATTR0_4BPP | ATTR0_SQUARE;
     shadowOAM[25].attr1 = (depression.col) | ATTR1_MEDIUM;
-	shadowOAM[25].attr2 = ATTR2_TILEID(26, 3) | ATTR2_PALROW(0);
+	shadowOAM[25].attr2 = ATTR2_TILEID(26, depression.curFrame) | ATTR2_PALROW(0);
 
 }
 
@@ -319,9 +343,9 @@ void initMiniDepressions() {
 	for (int i = 0; i < ENEMYCOUNT; i++) {
 		miniDep1[i].width = 16;
 		miniDep1[i].height = 16;
-		miniDep1[i].cDel = 1;
 		miniDep1[i].row = (rand() % 110) + 10;
 		miniDep1[i].col = (rand() % 170) + 40;
+		miniDep1[i].rDel = 1;
 		miniDep1[i].active = 1;
 		miniDep1[i].index = i + 5;
 	}
@@ -341,6 +365,21 @@ void updateMiniDepressions() {
 		}
 	}
 
+	// for (int i = 0; i < ENEMYCOUNT; i++) {
+	// 	int oldRow = miniDep1[i].row;
+	// 	int newRow = miniDep1[i].row + miniDep1[i].rDel;
+	// 	miniDep1[i].row += miniDep1[i].rDel;
+
+	// 	if (miniDep1[i].row == newRow && miniDep1[i].row >= oldRow) {
+	// 		miniDep1[i].row -= miniDep1[i].rDel;
+	// 	} 
+
+	// 	if (miniDep1[i].row <= oldRow) {
+	// 		// miniDep1[i].rDel = -(miniDep1[i].rDel);
+	// 		miniDep1[i].row += miniDep1[i].rDel;
+	// 	}
+	// }
+
 	// When all depression babies are killed, more will appear!
 	if (enemiesRemaining == 0) {
 		initMiniDepressions();
@@ -358,7 +397,7 @@ void drawMiniDepressions() {
 
 			shadowOAM[miniDep1[i].index].attr0 = (miniDep1[i].row) | ATTR0_4BPP | ATTR0_SQUARE;
 			shadowOAM[miniDep1[i].index].attr1 = (miniDep1[i].col) | ATTR1_SMALL;
-			shadowOAM[miniDep1[i].index].attr2 = ATTR2_TILEID(28, 1) | ATTR2_PALROW(0);
+			shadowOAM[miniDep1[i].index].attr2 = ATTR2_TILEID(6, 1) | ATTR2_PALROW(0);
 		} else {
 			shadowOAM[miniDep1[i].index].attr0 = ATTR0_HIDE;
 
@@ -502,6 +541,8 @@ void initMemoryBalls() {
 	memball1.col = (rand() % 60) + 25;
 	memball1.active = 1;
 	memball1.index = 70;
+	memball1.curFrame = 1;
+	memball1.numFrames = 5;
 
 	memball2.width = 16;
     memball2.height = 16;
@@ -509,39 +550,31 @@ void initMemoryBalls() {
 	memball2.col = (rand() % 60) + 25;
 	memball2.active = 1;
 	memball2.index = 71;
-
+	memball2.curFrame = 1;
+	memball2.numFrames = 5;
 
 }
 
 // Update Memory Balls
-// Nothing happens here yet
 void updateMemoryBalls() {
 
-	// for (int i = 0; i < MEMBALLCOUNT; i++) {
-
-
-		// if (livesRemaining < 5) {
-
-		// 	memball1.active = 1;
-		// 	memball2.active = 1;
-
-
-		// 	if (collision(player.col, player.row, player.width, player.height,
-		// 	memball1.col, memball1.row, memball1.width, memball1.height)) {
+		// Memory ball animation
+		memballCounter++;
+		if (memballCounter == 30) {
 			
-		// 		memball1.active = 0;
+			if(memball1.curFrame < memball1.numFrames) {
+				memball1.curFrame += memball1.curFrame + 1;
+			} else {
+				memball1.curFrame = 1;
+			}
 
-		// 	}
-
-		// 	if (collision(player.col, player.row, player.width, player.height,
-		// 	memball2.col, memball2.row, memball2.width, memball2.height)) {
-			
-		// 		memball2.active = 0;
-
-		// 	}
-
-
-		// } 
+			if (memball2.curFrame < memball2.numFrames) {
+				memball2.curFrame += memball2.curFrame + 1;
+			} else {
+				memball2.curFrame = 1;
+			}
+			memballCounter = 0;
+		}
 
 }
 
@@ -551,7 +584,7 @@ void drawMemoryBalls() {
 	if (memball1.active) {
 			shadowOAM[memball1.index].attr0 = (memball1.row) | ATTR0_4BPP | ATTR0_SQUARE;
 			shadowOAM[memball1.index].attr1 = (memball1.col) | ATTR1_SMALL;
-			shadowOAM[memball1.index].attr2 = ATTR2_TILEID(14, 1) | ATTR2_PALROW(0);
+			shadowOAM[memball1.index].attr2 = ATTR2_TILEID(14, memball1.curFrame) | ATTR2_PALROW(0);
 
 	} else {
 		shadowOAM[memball1.index].attr0 = ATTR0_HIDE;
@@ -560,7 +593,7 @@ void drawMemoryBalls() {
 	if (memball2.active) {
 			shadowOAM[memball2.index].attr0 = (memball2.row) | ATTR0_4BPP | ATTR0_SQUARE;
 			shadowOAM[memball2.index].attr1 = (memball2.col) | ATTR1_SMALL;
-			shadowOAM[memball2.index].attr2 = ATTR2_TILEID(12, 1) | ATTR2_PALROW(0);
+			shadowOAM[memball2.index].attr2 = ATTR2_TILEID(12, memball2.curFrame) | ATTR2_PALROW(0);
 
 	} else {
 		shadowOAM[memball2.index].attr0 = ATTR0_HIDE;
@@ -861,5 +894,159 @@ void drawEnemyLives() {
     } else {
         shadowOAM[69].attr0 = ATTR0_HIDE;
     }
+
+}
+
+// All Sound stuff below
+
+void setupSounds() {
+    REG_SOUNDCNT_X = SND_ENABLED;
+
+	REG_SOUNDCNT_H = SND_OUTPUT_RATIO_100 | 
+                     DSA_OUTPUT_RATIO_100 | 
+                     DSA_OUTPUT_TO_BOTH | 
+                     DSA_TIMER0 | 
+                     DSA_FIFO_RESET |
+                     DSB_OUTPUT_RATIO_100 | 
+                     DSB_OUTPUT_TO_BOTH | 
+                     DSB_TIMER1 | 
+                     DSB_FIFO_RESET;
+
+	REG_SOUNDCNT_L = 0;
+}
+
+void playSoundA( const unsigned char* sound, int length, int frequency, int loops) {
+        dma[1].cnt = 0;
+	
+        int ticks = PROCESSOR_CYCLES_PER_SECOND/frequency;
+	
+        DMANow(1, sound, REG_FIFO_A, DMA_DESTINATION_FIXED | DMA_AT_REFRESH | DMA_REPEAT | DMA_32);
+	
+        REG_TM0CNT = 0;
+	
+        REG_TM0D = -ticks;
+        REG_TM0CNT = TIMER_ON;
+
+        soundA.isPlaying = 1;
+        soundA.duration = ((VBLANK_FREQ*length)/frequency);
+        soundA.vBlankCount = 0;
+        soundA.data = sound;
+        soundA.length = length;
+        soundA.frequency = frequency;
+        soundA.loops = loops;
+        
+}
+
+
+void playSoundB( const unsigned char* sound, int length, int frequency, int loops) {
+
+        dma[2].cnt = 0;
+
+        int ticks = PROCESSOR_CYCLES_PER_SECOND/frequency;
+
+        DMANow(2, sound, REG_FIFO_B, DMA_DESTINATION_FIXED | DMA_AT_REFRESH | DMA_REPEAT | DMA_32);
+
+        REG_TM1CNT = 0;
+	
+        REG_TM1D = -ticks;
+        REG_TM1CNT = TIMER_ON;
+	
+        soundB.isPlaying = 1;
+        soundB.duration = ((VBLANK_FREQ*length)/frequency);
+        soundB.vBlankCount = 0;
+        soundB.data = sound;
+        soundB.length = length;
+        soundB.frequency = frequency;
+        soundB.loops = loops;
+
+
+}
+
+void setupInterrupts() {
+	REG_IME = 0;
+	
+    REG_INTERRUPT = (unsigned int) interruptHandler;
+
+	REG_IE |= INT_VBLANK;
+	REG_DISPSTAT |= INT_VBLANK_ENABLE;
+	REG_IME = 1;
+}
+
+void interruptHandler() {
+
+	REG_IME = 0;
+
+	if(REG_IF & INT_VBLANK) {
+		if (soundA.isPlaying) {
+
+            soundA.vBlankCount++;
+            if ((soundA.vBlankCount >= soundA.duration)) {
+                if(soundA.loops) {
+                    playSoundA(soundA.data, soundA.length, soundA.frequency, soundA.loops);
+                    
+                } else {
+                    soundA.isPlaying = 0;
+                    dma[1].cnt = 0;
+                    REG_TM0CNT = TIMER_OFF;
+
+                }
+
+            }
+
+		}
+
+		if (soundB.isPlaying) {
+
+            soundB.vBlankCount++;
+            if ((soundB.vBlankCount >= soundB.duration)) {
+                if(soundB.loops) {
+                    playSoundB(soundB.data, soundB.length, soundB.frequency, soundB.loops);
+                    
+                } else {
+                    soundB.isPlaying = 0;
+                    dma[2].cnt = 0;
+                    REG_TM1CNT = TIMER_OFF;
+
+                }
+
+            }
+
+		}
+
+		REG_IF = INT_VBLANK; 
+	}
+
+	REG_IME = 1;
+}
+
+void pauseSound() {
+
+    soundA.isPlaying = 0;
+    REG_TM0CNT = 0;
+
+    soundB.isPlaying = 0;
+    REG_TM1CNT = 0;
+
+}
+
+void unpauseSound() {
+
+    soundA.isPlaying = 1;
+    REG_TM0CNT = TIMER_ON;
+
+    soundB.isPlaying = 1;
+    REG_TM1CNT = TIMER_ON;
+	
+}
+
+void stopSound() {
+
+    soundA.isPlaying = 0;
+    dma[1].cnt = 0;
+    REG_TM0CNT = 0;
+
+    soundB.isPlaying = 0;
+    dma[2].cnt = 0;
+    REG_TM1CNT = 0;
 
 }
