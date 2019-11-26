@@ -454,7 +454,7 @@ initDepression:
 	mov	r4, #80
 	mov	lr, #200
 	mov	ip, #0
-	mov	r0, #4
+	mov	r0, #5
 	ldr	r3, .L94
 	stmib	r3, {r4, r5}
 	str	lr, [r3]
@@ -1467,7 +1467,7 @@ initGame:
 	mov	r8, #10
 	mov	r7, #20
 	mov	r6, #200
-	mov	r5, #4
+	mov	r5, #5
 	ldr	r2, .L240+4
 	str	r3, [r2, #16]
 	str	r3, [r2, #20]
@@ -2246,7 +2246,7 @@ updateDepression:
 	bx	r7
 	cmp	r0, #0
 	beq	.L317
-	mov	ip, #9
+	mov	ip, #13
 	mov	r3, #0
 	ldr	r2, .L332+20
 	mov	r1, #3328
@@ -2267,7 +2267,7 @@ updateDepression:
 	ldr	r2, .L332+24
 	ldr	r3, [r2]
 	add	r3, r3, #1
-	cmp	r3, #30
+	cmp	r3, #20
 	str	r3, [r2]
 	bne	.L313
 	add	r1, r5, #36

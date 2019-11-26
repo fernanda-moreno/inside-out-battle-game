@@ -283,7 +283,7 @@ void initDepression() {
 	depression.col = 200;
 	depression.active = 1;
     depression.bulletTimer = 0;
-	depression.numFrames = 4;
+	depression.numFrames = 5;
 	depression.curFrame = 1;
 
 }
@@ -306,7 +306,7 @@ void updateDepression() {
 	for (int i = 0; i < PLAYERBULLETCOUNT; i++) {
 		if (depression.active && b[i].active && collision(depression.col, depression.row, depression.width, depression.height,
 		b[i].col, b[i].row, b[i].width,b[i].height)) {
-			depression.curFrame = 9;
+			depression.curFrame = 13;
 			playSoundB(shoot, SHOOTLEN, SHOOTFREQ, 0);
 			b[i].active = 0;
 			depressionLivesRemaining--;
@@ -317,7 +317,7 @@ void updateDepression() {
 	}
 
 	depCounter++;
-	if (depCounter == 30) {
+	if (depCounter == 20) {
 			
 		if(depression.curFrame <= (depression.numFrames)) {
 			depression.curFrame += 4;

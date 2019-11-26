@@ -30,7 +30,7 @@ goToStart:
 	ldr	r1, .L4+4
 	mov	lr, pc
 	bx	r4
-	mov	r3, #3264
+	mov	r3, #3728
 	mov	r2, #100663296
 	ldr	r1, .L4+8
 	mov	r0, #3
@@ -61,10 +61,10 @@ goToStart:
 	.align	2
 .L4:
 	.word	DMANow
-	.word	insideOutStartBgPal
-	.word	insideOutStartBgTiles
+	.word	insideOutNewStartBgPal
+	.word	insideOutNewStartBgTiles
 	.word	100720640
-	.word	insideOutStartBgMap
+	.word	insideOutNewStartBgMap
 	.word	stopSound
 	.word	playSoundA
 	.word	11025

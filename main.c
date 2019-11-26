@@ -1,11 +1,8 @@
 /** 
  * TODO: 
- * Sprite animations for Depression enemy - every time it gets shot, it changes color
- *      like a thunderstorm cloud does when there's lightning
- * 
- * Add sound to the game (winning music, losing music, game music, sound when Joy gets hit by lightning)
- * 
- * Improve the art a bit, add more to the start background
+ * Polishing - Improve the art a bit, make each background prettier
+ *          More specifically, make the game background flow nicer as it transtions from end back to beginning
+ *          Make the pause background image a bit cleaner
  * 
  * DONE: 
  * (Milestone 02)
@@ -35,7 +32,7 @@
  * Added animations for memory balls and Depression. Whenever Depression gets hit with lightning,
  *      his mouth forms an "O" shape to make him look hurt
  * 
- * 
+ * Changed the start screen a bit by writing the game title with a more Disney-like font
  *  
  * BUGS: 
  * (Fixed) Player can have 5 lives max. When the player collided with the memory ball while they had 5 lives,
@@ -72,8 +69,7 @@
  * Press X to shoot sunshine rays at Depression and the mini clouds.
  * Press Enter to pause/unpause the game. While in the pause state, you can press Backspace to return to Main Menu.
  * 
- * Press A to switch between Joy and Sadness characters
- * 
+ * Press A to switch between Joy and Sadness characters (cheat =  Sadness is immune to the lightning strikes)
  * 
  * **/
 
@@ -83,6 +79,7 @@
 #include "winJoy.h"
 #include "loseSadness.h"
 #include "insideOutStartBg.h"
+#include "insideOutNewStartBg.h"
 #include "instructionsBg.h"
 #include "skyBg.h"
 #include "spritesheet.h"
@@ -195,9 +192,13 @@ void startState() {
 void goToStart() {
     REG_DISPCTL = MODE0 | BG0_ENABLE;
 
-    DMANow(3, insideOutStartBgPal, PALETTE, insideOutStartBgPalLen / 2);
-    DMANow(3, insideOutStartBgTiles, &CHARBLOCK[0], insideOutStartBgTilesLen / 2);
-    DMANow(3, insideOutStartBgMap, &SCREENBLOCK[28], insideOutStartBgMapLen / 2);
+    // DMANow(3, insideOutStartBgPal, PALETTE, insideOutStartBgPalLen / 2);
+    // DMANow(3, insideOutStartBgTiles, &CHARBLOCK[0], insideOutStartBgTilesLen / 2);
+    // DMANow(3, insideOutStartBgMap, &SCREENBLOCK[28], insideOutStartBgMapLen / 2);
+
+    DMANow(3, insideOutNewStartBgPal, PALETTE, insideOutNewStartBgPalLen / 2);
+    DMANow(3, insideOutNewStartBgTiles, &CHARBLOCK[0], insideOutNewStartBgTilesLen / 2);
+    DMANow(3, insideOutNewStartBgMap, &SCREENBLOCK[28], insideOutNewStartBgMapLen / 2);
 
     stopSound();
 	playSoundA(bundleofjoy, BUNDLEOFJOYLEN, BUNDLEOFJOYFREQ, 1);
