@@ -110,8 +110,6 @@ void updateGame() {
 		updateMemoryBalls();
 
 	}
-	// updateMemoryBalls();
-
 
 	for(int i = 0; i < LIFECOUNT; i++) {
 		updateLives();
@@ -161,6 +159,7 @@ void initPlayer() {
 	player.col = 10;
     player.bulletTimer = 20;
 	player.aniState = 1;
+	player.curFrame = 0;
 }
 
 // Update the player as she moves on the screen and shoots sunshine rays
@@ -240,6 +239,12 @@ void updatePlayer() {
 			
 	}
 
+	player.curFrame = 0;
+	if (player.curFrame == 0) {
+		if (BUTTON_HELD(BUTTON_RIGHT))
+			player.curFrame = 2;
+	}
+
 	if (player.aniState == 1) {
 		if (BUTTON_PRESSED(BUTTON_L)) {
 			player.aniState = 3;
@@ -250,6 +255,7 @@ void updatePlayer() {
 			player.aniState = 1;
 		}
 	}
+
 
 
 	// If player collides with big Depression enemy, player loses
@@ -268,7 +274,7 @@ void drawPlayer() {
 
     shadowOAM[0].attr0 = (player.row) | ATTR0_4BPP | ATTR0_SQUARE | ATTR0_BLEND;
     shadowOAM[0].attr1 = (player.col) | ATTR1_SMALL;
-    shadowOAM[0].attr2 = ATTR2_TILEID(0, player.aniState) | ATTR2_PALROW(0);
+    shadowOAM[0].attr2 = ATTR2_TILEID(player.curFrame, player.aniState) | ATTR2_PALROW(0);
 
 
 }
@@ -365,21 +371,6 @@ void updateMiniDepressions() {
 		}
 	}
 
-	// for (int i = 0; i < ENEMYCOUNT; i++) {
-	// 	int oldRow = miniDep1[i].row;
-	// 	int newRow = miniDep1[i].row + miniDep1[i].rDel;
-	// 	miniDep1[i].row += miniDep1[i].rDel;
-
-	// 	if (miniDep1[i].row == newRow && miniDep1[i].row >= oldRow) {
-	// 		miniDep1[i].row -= miniDep1[i].rDel;
-	// 	} 
-
-	// 	if (miniDep1[i].row <= oldRow) {
-	// 		// miniDep1[i].rDel = -(miniDep1[i].rDel);
-	// 		miniDep1[i].row += miniDep1[i].rDel;
-	// 	}
-	// }
-
 	// When all depression babies are killed, more will appear!
 	if (enemiesRemaining == 0) {
 		initMiniDepressions();
@@ -397,7 +388,7 @@ void drawMiniDepressions() {
 
 			shadowOAM[miniDep1[i].index].attr0 = (miniDep1[i].row) | ATTR0_4BPP | ATTR0_SQUARE;
 			shadowOAM[miniDep1[i].index].attr1 = (miniDep1[i].col) | ATTR1_SMALL;
-			shadowOAM[miniDep1[i].index].attr2 = ATTR2_TILEID(6, 1) | ATTR2_PALROW(0);
+			shadowOAM[miniDep1[i].index].attr2 = ATTR2_TILEID(8, 1) | ATTR2_PALROW(0);
 		} else {
 			shadowOAM[miniDep1[i].index].attr0 = ATTR0_HIDE;
 
@@ -665,7 +656,7 @@ void drawLives() {
 	if (life1.active) {
         shadowOAM[20].attr0 = (life1.row) | ATTR0_4BPP | ATTR0_SQUARE;
         shadowOAM[20].attr1 = (life1.col) | ATTR1_SMALL;
-        shadowOAM[20].attr2 = ATTR2_TILEID(2, 1) | ATTR2_PALROW(0);
+        shadowOAM[20].attr2 = ATTR2_TILEID(4, 1) | ATTR2_PALROW(0);
     } else {
         shadowOAM[20].attr0 = ATTR0_HIDE;
     }
@@ -673,7 +664,7 @@ void drawLives() {
 	if (life2.active) {
         shadowOAM[19].attr0 = (life2.row) | ATTR0_4BPP | ATTR0_SQUARE;
         shadowOAM[19].attr1 = (life2.col) | ATTR1_SMALL;
-        shadowOAM[19].attr2 = ATTR2_TILEID(2, 1) | ATTR2_PALROW(0);
+        shadowOAM[19].attr2 = ATTR2_TILEID(4, 1) | ATTR2_PALROW(0);
     } else {
         shadowOAM[19].attr0 = ATTR0_HIDE;
     }
@@ -681,7 +672,7 @@ void drawLives() {
 	if (life3.active) {
         shadowOAM[18].attr0 = (life3.row) | ATTR0_4BPP | ATTR0_SQUARE;
         shadowOAM[18].attr1 = (life3.col) | ATTR1_SMALL;
-        shadowOAM[18].attr2 = ATTR2_TILEID(2, 1) | ATTR2_PALROW(0);
+        shadowOAM[18].attr2 = ATTR2_TILEID(4, 1) | ATTR2_PALROW(0);
     } else {
         shadowOAM[18].attr0 = ATTR0_HIDE;
     }
@@ -689,7 +680,7 @@ void drawLives() {
 	if (life4.active) {
         shadowOAM[17].attr0 = (life4.row) | ATTR0_4BPP | ATTR0_SQUARE;
         shadowOAM[17].attr1 = (life4.col) | ATTR1_SMALL;
-        shadowOAM[17].attr2 = ATTR2_TILEID(2, 1) | ATTR2_PALROW(0);
+        shadowOAM[17].attr2 = ATTR2_TILEID(4, 1) | ATTR2_PALROW(0);
     } else {
         shadowOAM[17].attr0 = ATTR0_HIDE;
     }
@@ -697,7 +688,7 @@ void drawLives() {
 	if (life5.active) {
         shadowOAM[16].attr0 = (life5.row) | ATTR0_4BPP | ATTR0_SQUARE;
         shadowOAM[16].attr1 = (life5.col) | ATTR1_SMALL;
-        shadowOAM[16].attr2 = ATTR2_TILEID(2, 1) | ATTR2_PALROW(0);
+        shadowOAM[16].attr2 = ATTR2_TILEID(4, 1) | ATTR2_PALROW(0);
     } else {
         shadowOAM[16].attr0 = ATTR0_HIDE;
     }
@@ -818,7 +809,7 @@ void drawEnemyLives() {
 	if (eLife1.active) {
         shadowOAM[60].attr0 = (eLife1.row) | ATTR0_4BPP | ATTR0_SQUARE;
         shadowOAM[60].attr1 = (eLife1.col) | ATTR1_SMALL;
-        shadowOAM[60].attr2 = ATTR2_TILEID(4, 1) | ATTR2_PALROW(0);
+        shadowOAM[60].attr2 = ATTR2_TILEID(6, 1) | ATTR2_PALROW(0);
     } else {
         shadowOAM[60].attr0 = ATTR0_HIDE;
     }
@@ -826,7 +817,7 @@ void drawEnemyLives() {
 	if (eLife2.active) {
         shadowOAM[61].attr0 = (eLife2.row) | ATTR0_4BPP | ATTR0_SQUARE;
         shadowOAM[61].attr1 = (eLife2.col) | ATTR1_SMALL;
-        shadowOAM[61].attr2 = ATTR2_TILEID(4, 1) | ATTR2_PALROW(0);
+        shadowOAM[61].attr2 = ATTR2_TILEID(6, 1) | ATTR2_PALROW(0);
     } else {
         shadowOAM[61].attr0 = ATTR0_HIDE;
     }
@@ -834,7 +825,7 @@ void drawEnemyLives() {
 	if (eLife3.active) {
         shadowOAM[62].attr0 = (eLife3.row) | ATTR0_4BPP | ATTR0_SQUARE;
         shadowOAM[62].attr1 = (eLife3.col) | ATTR1_SMALL;
-        shadowOAM[62].attr2 = ATTR2_TILEID(4, 1) | ATTR2_PALROW(0);
+        shadowOAM[62].attr2 = ATTR2_TILEID(6, 1) | ATTR2_PALROW(0);
     } else {
         shadowOAM[62].attr0 = ATTR0_HIDE;
     }
@@ -842,7 +833,7 @@ void drawEnemyLives() {
 	if (eLife4.active) {
         shadowOAM[63].attr0 = (eLife4.row) | ATTR0_4BPP | ATTR0_SQUARE;
         shadowOAM[63].attr1 = (eLife4.col) | ATTR1_SMALL;
-        shadowOAM[63].attr2 = ATTR2_TILEID(4, 1) | ATTR2_PALROW(0);
+        shadowOAM[63].attr2 = ATTR2_TILEID(6, 1) | ATTR2_PALROW(0);
     } else {
         shadowOAM[63].attr0 = ATTR0_HIDE;
     }
@@ -850,7 +841,7 @@ void drawEnemyLives() {
 	if (eLife5.active) {
         shadowOAM[64].attr0 = (eLife5.row) | ATTR0_4BPP | ATTR0_SQUARE;
         shadowOAM[64].attr1 = (eLife5.col) | ATTR1_SMALL;
-        shadowOAM[64].attr2 = ATTR2_TILEID(4, 1) | ATTR2_PALROW(0);
+        shadowOAM[64].attr2 = ATTR2_TILEID(6, 1) | ATTR2_PALROW(0);
     } else {
         shadowOAM[64].attr0 = ATTR0_HIDE;
     }
@@ -858,7 +849,7 @@ void drawEnemyLives() {
 	if (eLife6.active) {
         shadowOAM[65].attr0 = (eLife6.row) | ATTR0_4BPP | ATTR0_SQUARE;
         shadowOAM[65].attr1 = (eLife6.col) | ATTR1_SMALL;
-        shadowOAM[65].attr2 = ATTR2_TILEID(4, 1) | ATTR2_PALROW(0);
+        shadowOAM[65].attr2 = ATTR2_TILEID(6, 1) | ATTR2_PALROW(0);
     } else {
         shadowOAM[65].attr0 = ATTR0_HIDE;
     }
@@ -866,7 +857,7 @@ void drawEnemyLives() {
 	if (eLife7.active) {
         shadowOAM[66].attr0 = (eLife7.row) | ATTR0_4BPP | ATTR0_SQUARE;
         shadowOAM[66].attr1 = (eLife7.col) | ATTR1_SMALL;
-        shadowOAM[66].attr2 = ATTR2_TILEID(4, 1) | ATTR2_PALROW(0);
+        shadowOAM[66].attr2 = ATTR2_TILEID(6, 1) | ATTR2_PALROW(0);
     } else {
         shadowOAM[66].attr0 = ATTR0_HIDE;
     }
@@ -874,7 +865,7 @@ void drawEnemyLives() {
 	if (eLife8.active) {
         shadowOAM[67].attr0 = (eLife8.row) | ATTR0_4BPP | ATTR0_SQUARE;
         shadowOAM[67].attr1 = (eLife8.col) | ATTR1_SMALL;
-        shadowOAM[67].attr2 = ATTR2_TILEID(4, 1) | ATTR2_PALROW(0);
+        shadowOAM[67].attr2 = ATTR2_TILEID(6, 1) | ATTR2_PALROW(0);
     } else {
         shadowOAM[67].attr0 = ATTR0_HIDE;
     }
@@ -882,7 +873,7 @@ void drawEnemyLives() {
 	if (eLife9.active) {
         shadowOAM[68].attr0 = (eLife9.row) | ATTR0_4BPP | ATTR0_SQUARE;
         shadowOAM[68].attr1 = (eLife9.col) | ATTR1_SMALL;
-        shadowOAM[68].attr2 = ATTR2_TILEID(4, 1) | ATTR2_PALROW(0);
+        shadowOAM[68].attr2 = ATTR2_TILEID(6, 1) | ATTR2_PALROW(0);
     } else {
         shadowOAM[68].attr0 = ATTR0_HIDE;
     }
@@ -890,7 +881,7 @@ void drawEnemyLives() {
 	if (eLife10.active) {
         shadowOAM[69].attr0 = (eLife10.row) | ATTR0_4BPP | ATTR0_SQUARE;
         shadowOAM[69].attr1 = (eLife10.col) | ATTR1_SMALL;
-        shadowOAM[69].attr2 = ATTR2_TILEID(4, 1) | ATTR2_PALROW(0);
+        shadowOAM[69].attr2 = ATTR2_TILEID(6, 1) | ATTR2_PALROW(0);
     } else {
         shadowOAM[69].attr0 = ATTR0_HIDE;
     }

@@ -8,6 +8,7 @@ typedef struct {
     int height;
     int bulletTimer;
     int aniState;
+    int curFrame;
 
 } PLAYER;
 

@@ -33,6 +33,12 @@
  *      his mouth forms an "O" shape to make him look hurt
  * 
  * Changed the start screen a bit by writing the game title with a more Disney-like font
+ * 
+ * Updated the Instructions page to specify that pressing A allows you to change character to Sadness
+ * 
+ * (Polishing for Final Demo)
+ * When player is going forward, their curFrame is updated so that it shows them leaning forward
+ * Cleaned up the pause background
  *  
  * BUGS: 
  * (Fixed) Player can have 5 lives max. When the player collided with the memory ball while they had 5 lives,
@@ -79,11 +85,9 @@
 #include "winJoy.h"
 #include "loseSadness.h"
 #include "insideOutStartBg.h"
-#include "insideOutNewStartBg.h"
 #include "instructionsBg.h"
 #include "skyBg.h"
 #include "spritesheet.h"
-#include "pauseSky.h"
 #include "pauseSky-2.h"
 #include "bundleofjoy.h"
 #include "chasingSadness.h"
@@ -192,13 +196,9 @@ void startState() {
 void goToStart() {
     REG_DISPCTL = MODE0 | BG0_ENABLE;
 
-    // DMANow(3, insideOutStartBgPal, PALETTE, insideOutStartBgPalLen / 2);
-    // DMANow(3, insideOutStartBgTiles, &CHARBLOCK[0], insideOutStartBgTilesLen / 2);
-    // DMANow(3, insideOutStartBgMap, &SCREENBLOCK[28], insideOutStartBgMapLen / 2);
-
-    DMANow(3, insideOutNewStartBgPal, PALETTE, insideOutNewStartBgPalLen / 2);
-    DMANow(3, insideOutNewStartBgTiles, &CHARBLOCK[0], insideOutNewStartBgTilesLen / 2);
-    DMANow(3, insideOutNewStartBgMap, &SCREENBLOCK[28], insideOutNewStartBgMapLen / 2);
+    DMANow(3, insideOutStartBgPal, PALETTE, insideOutStartBgPalLen / 2);
+    DMANow(3, insideOutStartBgTiles, &CHARBLOCK[0], insideOutStartBgTilesLen / 2);
+    DMANow(3, insideOutStartBgMap, &SCREENBLOCK[28], insideOutStartBgMapLen / 2);
 
     stopSound();
 	playSoundA(bundleofjoy, BUNDLEOFJOYLEN, BUNDLEOFJOYFREQ, 1);
@@ -233,10 +233,6 @@ void gameState() {
     drawGame();
 
     if (BUTTON_PRESSED(BUTTON_START)) {
-        // add some variable to keep track of current hoff
- 
-        // hoffCurrent = REG_BG0HOFF;
-
 
         goToPause();
     }
@@ -254,9 +250,6 @@ void gameState() {
 void goToGame() {
     REG_BG0CNT = BG_4BPP | BG_SIZE_LARGE | BG_CHARBLOCK(0) | BG_SCREENBLOCK(28);
     REG_DISPCTL = MODE0 | BG0_ENABLE | SPRITE_ENABLE;
-
-    // stopSound();
-    // playSoundA(chasingSadness, CHASINGSADNESSLEN, CHASINGSADNESSFREQ, 1);
 
     DMANow(3, skyBgPal, PALETTE, skyBgPalLen / 2);
     DMANow(3, skyBgTiles, &CHARBLOCK[0], skyBgTilesLen / 2);
@@ -287,10 +280,6 @@ void pauseState() {
 
 
     if (BUTTON_PRESSED(BUTTON_START)) {
-        // set hoff back to the saved hoff in game state
-        // hoff = hoffCurrent;
-
-        // it seems that the game is already keeping track of current hoff? 
         unpauseSound();
         goToGame();
     } 
@@ -299,8 +288,7 @@ void pauseState() {
     } 
 }
 
-// Image of Fear as pause state
-// TODO: Implement an additional moving background in pause state
+// Image of Fear as pause state with moving background
 void goToPause() {
 
     REG_BG0CNT = BG_4BPP | BG_SIZE_SMALL | BG_CHARBLOCK(0) | BG_SCREENBLOCK(28);

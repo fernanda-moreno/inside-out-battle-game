@@ -109,6 +109,7 @@ typedef struct {
     int height;
     int bulletTimer;
     int aniState;
+    int curFrame;
 
 } PLAYER;
 
@@ -198,7 +199,7 @@ typedef struct {
 extern int livesRemaining;
 extern int enemiesRemaining;
 extern int depressionLivesRemaining;
-# 110 "game.h"
+# 111 "game.h"
 void initGame();
 void updateGame();
 void drawGame();
@@ -1180,8 +1181,6 @@ void updateGame() {
 
  }
 
-
-
  for(int i = 0; i < 5; i++) {
   updateLives();
  }
@@ -1230,6 +1229,7 @@ void initPlayer() {
  player.col = 10;
     player.bulletTimer = 20;
  player.aniState = 1;
+ player.curFrame = 0;
 }
 
 
@@ -1309,6 +1309,13 @@ void updatePlayer() {
 
  }
 
+ player.curFrame = 0;
+ if (player.curFrame == 0) {
+  if ((~((*(volatile unsigned short *)0x04000130)) & ((1<<4))))
+   player.curFrame = 2;
+ }
+
+
  if (player.aniState == 1) {
   if ((!(~(oldButtons)&((1<<9))) && (~buttons & ((1<<9))))) {
    player.aniState = 3;
@@ -1319,6 +1326,7 @@ void updatePlayer() {
    player.aniState = 1;
   }
  }
+
 
 
 
@@ -1337,7 +1345,7 @@ void drawPlayer() {
 
     shadowOAM[0].attr0 = (player.row) | (0<<13) | (0<<14) | (1<<10);
     shadowOAM[0].attr1 = (player.col) | (1<<14);
-    shadowOAM[0].attr2 = ((player.aniState)*32+(0)) | ((0)<<12);
+    shadowOAM[0].attr2 = ((player.aniState)*32+(player.curFrame)) | ((0)<<12);
 
 
 }
@@ -1433,7 +1441,8 @@ void updateMiniDepressions() {
    }
   }
  }
-# 384 "game.c"
+
+
  if (enemiesRemaining == 0) {
   initMiniDepressions();
   enemiesRemaining = 8;
@@ -1450,7 +1459,7 @@ void drawMiniDepressions() {
 
    shadowOAM[miniDep1[i].index].attr0 = (miniDep1[i].row) | (0<<13) | (0<<14);
    shadowOAM[miniDep1[i].index].attr1 = (miniDep1[i].col) | (1<<14);
-   shadowOAM[miniDep1[i].index].attr2 = ((1)*32+(6)) | ((0)<<12);
+   shadowOAM[miniDep1[i].index].attr2 = ((1)*32+(8)) | ((0)<<12);
   } else {
    shadowOAM[miniDep1[i].index].attr0 = (2<<8);
 
@@ -1718,7 +1727,7 @@ void drawLives() {
  if (life1.active) {
         shadowOAM[20].attr0 = (life1.row) | (0<<13) | (0<<14);
         shadowOAM[20].attr1 = (life1.col) | (1<<14);
-        shadowOAM[20].attr2 = ((1)*32+(2)) | ((0)<<12);
+        shadowOAM[20].attr2 = ((1)*32+(4)) | ((0)<<12);
     } else {
         shadowOAM[20].attr0 = (2<<8);
     }
@@ -1726,7 +1735,7 @@ void drawLives() {
  if (life2.active) {
         shadowOAM[19].attr0 = (life2.row) | (0<<13) | (0<<14);
         shadowOAM[19].attr1 = (life2.col) | (1<<14);
-        shadowOAM[19].attr2 = ((1)*32+(2)) | ((0)<<12);
+        shadowOAM[19].attr2 = ((1)*32+(4)) | ((0)<<12);
     } else {
         shadowOAM[19].attr0 = (2<<8);
     }
@@ -1734,7 +1743,7 @@ void drawLives() {
  if (life3.active) {
         shadowOAM[18].attr0 = (life3.row) | (0<<13) | (0<<14);
         shadowOAM[18].attr1 = (life3.col) | (1<<14);
-        shadowOAM[18].attr2 = ((1)*32+(2)) | ((0)<<12);
+        shadowOAM[18].attr2 = ((1)*32+(4)) | ((0)<<12);
     } else {
         shadowOAM[18].attr0 = (2<<8);
     }
@@ -1742,7 +1751,7 @@ void drawLives() {
  if (life4.active) {
         shadowOAM[17].attr0 = (life4.row) | (0<<13) | (0<<14);
         shadowOAM[17].attr1 = (life4.col) | (1<<14);
-        shadowOAM[17].attr2 = ((1)*32+(2)) | ((0)<<12);
+        shadowOAM[17].attr2 = ((1)*32+(4)) | ((0)<<12);
     } else {
         shadowOAM[17].attr0 = (2<<8);
     }
@@ -1750,7 +1759,7 @@ void drawLives() {
  if (life5.active) {
         shadowOAM[16].attr0 = (life5.row) | (0<<13) | (0<<14);
         shadowOAM[16].attr1 = (life5.col) | (1<<14);
-        shadowOAM[16].attr2 = ((1)*32+(2)) | ((0)<<12);
+        shadowOAM[16].attr2 = ((1)*32+(4)) | ((0)<<12);
     } else {
         shadowOAM[16].attr0 = (2<<8);
     }
@@ -1871,7 +1880,7 @@ void drawEnemyLives() {
  if (eLife1.active) {
         shadowOAM[60].attr0 = (eLife1.row) | (0<<13) | (0<<14);
         shadowOAM[60].attr1 = (eLife1.col) | (1<<14);
-        shadowOAM[60].attr2 = ((1)*32+(4)) | ((0)<<12);
+        shadowOAM[60].attr2 = ((1)*32+(6)) | ((0)<<12);
     } else {
         shadowOAM[60].attr0 = (2<<8);
     }
@@ -1879,7 +1888,7 @@ void drawEnemyLives() {
  if (eLife2.active) {
         shadowOAM[61].attr0 = (eLife2.row) | (0<<13) | (0<<14);
         shadowOAM[61].attr1 = (eLife2.col) | (1<<14);
-        shadowOAM[61].attr2 = ((1)*32+(4)) | ((0)<<12);
+        shadowOAM[61].attr2 = ((1)*32+(6)) | ((0)<<12);
     } else {
         shadowOAM[61].attr0 = (2<<8);
     }
@@ -1887,7 +1896,7 @@ void drawEnemyLives() {
  if (eLife3.active) {
         shadowOAM[62].attr0 = (eLife3.row) | (0<<13) | (0<<14);
         shadowOAM[62].attr1 = (eLife3.col) | (1<<14);
-        shadowOAM[62].attr2 = ((1)*32+(4)) | ((0)<<12);
+        shadowOAM[62].attr2 = ((1)*32+(6)) | ((0)<<12);
     } else {
         shadowOAM[62].attr0 = (2<<8);
     }
@@ -1895,7 +1904,7 @@ void drawEnemyLives() {
  if (eLife4.active) {
         shadowOAM[63].attr0 = (eLife4.row) | (0<<13) | (0<<14);
         shadowOAM[63].attr1 = (eLife4.col) | (1<<14);
-        shadowOAM[63].attr2 = ((1)*32+(4)) | ((0)<<12);
+        shadowOAM[63].attr2 = ((1)*32+(6)) | ((0)<<12);
     } else {
         shadowOAM[63].attr0 = (2<<8);
     }
@@ -1903,7 +1912,7 @@ void drawEnemyLives() {
  if (eLife5.active) {
         shadowOAM[64].attr0 = (eLife5.row) | (0<<13) | (0<<14);
         shadowOAM[64].attr1 = (eLife5.col) | (1<<14);
-        shadowOAM[64].attr2 = ((1)*32+(4)) | ((0)<<12);
+        shadowOAM[64].attr2 = ((1)*32+(6)) | ((0)<<12);
     } else {
         shadowOAM[64].attr0 = (2<<8);
     }
@@ -1911,7 +1920,7 @@ void drawEnemyLives() {
  if (eLife6.active) {
         shadowOAM[65].attr0 = (eLife6.row) | (0<<13) | (0<<14);
         shadowOAM[65].attr1 = (eLife6.col) | (1<<14);
-        shadowOAM[65].attr2 = ((1)*32+(4)) | ((0)<<12);
+        shadowOAM[65].attr2 = ((1)*32+(6)) | ((0)<<12);
     } else {
         shadowOAM[65].attr0 = (2<<8);
     }
@@ -1919,7 +1928,7 @@ void drawEnemyLives() {
  if (eLife7.active) {
         shadowOAM[66].attr0 = (eLife7.row) | (0<<13) | (0<<14);
         shadowOAM[66].attr1 = (eLife7.col) | (1<<14);
-        shadowOAM[66].attr2 = ((1)*32+(4)) | ((0)<<12);
+        shadowOAM[66].attr2 = ((1)*32+(6)) | ((0)<<12);
     } else {
         shadowOAM[66].attr0 = (2<<8);
     }
@@ -1927,7 +1936,7 @@ void drawEnemyLives() {
  if (eLife8.active) {
         shadowOAM[67].attr0 = (eLife8.row) | (0<<13) | (0<<14);
         shadowOAM[67].attr1 = (eLife8.col) | (1<<14);
-        shadowOAM[67].attr2 = ((1)*32+(4)) | ((0)<<12);
+        shadowOAM[67].attr2 = ((1)*32+(6)) | ((0)<<12);
     } else {
         shadowOAM[67].attr0 = (2<<8);
     }
@@ -1935,7 +1944,7 @@ void drawEnemyLives() {
  if (eLife9.active) {
         shadowOAM[68].attr0 = (eLife9.row) | (0<<13) | (0<<14);
         shadowOAM[68].attr1 = (eLife9.col) | (1<<14);
-        shadowOAM[68].attr2 = ((1)*32+(4)) | ((0)<<12);
+        shadowOAM[68].attr2 = ((1)*32+(6)) | ((0)<<12);
     } else {
         shadowOAM[68].attr0 = (2<<8);
     }
@@ -1943,7 +1952,7 @@ void drawEnemyLives() {
  if (eLife10.active) {
         shadowOAM[69].attr0 = (eLife10.row) | (0<<13) | (0<<14);
         shadowOAM[69].attr1 = (eLife10.col) | (1<<14);
-        shadowOAM[69].attr2 = ((1)*32+(4)) | ((0)<<12);
+        shadowOAM[69].attr2 = ((1)*32+(6)) | ((0)<<12);
     } else {
         shadowOAM[69].attr0 = (2<<8);
     }

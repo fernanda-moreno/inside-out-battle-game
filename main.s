@@ -61,10 +61,10 @@ goToStart:
 	.align	2
 .L4:
 	.word	DMANow
-	.word	insideOutNewStartBgPal
-	.word	insideOutNewStartBgTiles
+	.word	insideOutStartBgPal
+	.word	insideOutStartBgTiles
 	.word	100720640
-	.word	insideOutNewStartBgMap
+	.word	insideOutStartBgMap
 	.word	stopSound
 	.word	playSoundA
 	.word	11025
@@ -179,7 +179,7 @@ goToInstructions:
 .L16:
 	.word	DMANow
 	.word	instructionsBgPal
-	.word	5856
+	.word	6416
 	.word	instructionsBgTiles
 	.word	100720640
 	.word	instructionsBgMap
@@ -514,7 +514,7 @@ goToPause:
 	.word	pauseSound
 	.word	DMANow
 	.word	pauseFearPal
-	.word	4720
+	.word	4240
 	.word	pauseFearTiles
 	.word	100720640
 	.word	pauseFearMap
