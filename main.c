@@ -167,7 +167,7 @@ void initialize() {
     REG_BG0CNT = BG_4BPP | BG_SIZE_LARGE | BG_CHARBLOCK(0) | BG_SCREENBLOCK(28);
 
     livesRemaining = 5;
-    enemiesRemaining = 8;
+    enemiesRemaining = 9;
     depressionLivesRemaining = 10;
 
     frameCounter = 0;

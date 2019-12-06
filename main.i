@@ -2,7 +2,7 @@
 # 1 "<built-in>"
 # 1 "<command-line>"
 # 1 "main.c"
-# 78 "main.c"
+# 82 "main.c"
 # 1 "myLib.h" 1
 
 
@@ -98,7 +98,7 @@ typedef struct
  u16 color;
  int AI_STATE;
 } MOVOBJ;
-# 79 "main.c" 2
+# 83 "main.c" 2
 # 1 "game.h" 1
 
 typedef struct {
@@ -249,7 +249,7 @@ void stopSound();
 void playSoundA();
 void pauseSound();
 void unpauseSound();
-# 80 "main.c" 2
+# 84 "main.c" 2
 # 1 "pauseFear.h" 1
 # 22 "pauseFear.h"
 extern const unsigned short pauseFearTiles[4240];
@@ -259,7 +259,7 @@ extern const unsigned short pauseFearMap[1024];
 
 
 extern const unsigned short pauseFearPal[256];
-# 81 "main.c" 2
+# 85 "main.c" 2
 # 1 "winJoy.h" 1
 # 22 "winJoy.h"
 extern const unsigned short winJoyTiles[5616];
@@ -269,7 +269,7 @@ extern const unsigned short winJoyMap[1024];
 
 
 extern const unsigned short winJoyPal[256];
-# 82 "main.c" 2
+# 86 "main.c" 2
 # 1 "loseSadness.h" 1
 # 22 "loseSadness.h"
 extern const unsigned short loseSadnessTiles[6080];
@@ -279,27 +279,27 @@ extern const unsigned short loseSadnessMap[1024];
 
 
 extern const unsigned short loseSadnessPal[256];
-# 83 "main.c" 2
+# 87 "main.c" 2
 # 1 "insideOutStartBg.h" 1
 # 22 "insideOutStartBg.h"
-extern const unsigned short insideOutStartBgTiles[3728];
+extern const unsigned short insideOutStartBgTiles[4032];
 
 
 extern const unsigned short insideOutStartBgMap[1024];
 
 
 extern const unsigned short insideOutStartBgPal[256];
-# 84 "main.c" 2
+# 88 "main.c" 2
 # 1 "instructionsBg.h" 1
 # 22 "instructionsBg.h"
-extern const unsigned short instructionsBgTiles[6416];
+extern const unsigned short instructionsBgTiles[6400];
 
 
 extern const unsigned short instructionsBgMap[1024];
 
 
 extern const unsigned short instructionsBgPal[256];
-# 85 "main.c" 2
+# 89 "main.c" 2
 # 1 "skyBg.h" 1
 # 22 "skyBg.h"
 extern const unsigned short skyBgTiles[25536];
@@ -309,14 +309,14 @@ extern const unsigned short skyBgMap[6144];
 
 
 extern const unsigned short skyBgPal[256];
-# 86 "main.c" 2
+# 90 "main.c" 2
 # 1 "spritesheet.h" 1
 # 21 "spritesheet.h"
 extern const unsigned short spritesheetTiles[16384];
 
 
 extern const unsigned short spritesheetPal[256];
-# 87 "main.c" 2
+# 91 "main.c" 2
 # 1 "pauseSky-2.h" 1
 # 22 "pauseSky-2.h"
 extern const unsigned short pauseSky_2Tiles[736];
@@ -326,23 +326,23 @@ extern const unsigned short pauseSky_2Map[2048];
 
 
 extern const unsigned short pauseSky_2Pal[256];
-# 88 "main.c" 2
+# 92 "main.c" 2
 # 1 "bundleofjoy.h" 1
 # 20 "bundleofjoy.h"
 extern const unsigned char bundleofjoy[517437];
-# 89 "main.c" 2
+# 93 "main.c" 2
 # 1 "chasingSadness.h" 1
 # 20 "chasingSadness.h"
 extern const unsigned char chasingSadness[1166688];
-# 90 "main.c" 2
+# 94 "main.c" 2
 # 1 "sadnessCrying.h" 1
 # 20 "sadnessCrying.h"
 extern const unsigned char sadnessCrying[71579];
-# 91 "main.c" 2
+# 95 "main.c" 2
 # 1 "morethanafeeling.h" 1
 # 20 "morethanafeeling.h"
 extern const unsigned char morethanafeeling[368965];
-# 92 "main.c" 2
+# 96 "main.c" 2
 
 
 void initialize();
@@ -417,7 +417,7 @@ void initialize() {
     (*(volatile unsigned short*)0x4000008) = (0<<7) | (3<<14) | ((0)<<2) | ((28)<<8);
 
     livesRemaining = 5;
-    enemiesRemaining = 8;
+    enemiesRemaining = 9;
     depressionLivesRemaining = 10;
 
     frameCounter = 0;
@@ -447,7 +447,7 @@ void goToStart() {
     (*(unsigned short *)0x4000000) = 0 | (1<<8);
 
     DMANow(3, insideOutStartBgPal, ((unsigned short *)0x5000000), 512 / 2);
-    DMANow(3, insideOutStartBgTiles, &((charblock *)0x6000000)[0], 7456 / 2);
+    DMANow(3, insideOutStartBgTiles, &((charblock *)0x6000000)[0], 8064 / 2);
     DMANow(3, insideOutStartBgMap, &((screenblock *)0x6000000)[28], 2048 / 2);
 
     stopSound();
@@ -472,7 +472,7 @@ void instructionsState() {
 void goToInstructions() {
 
     DMANow(3, instructionsBgPal, ((unsigned short *)0x5000000), 512 / 2);
-    DMANow(3, instructionsBgTiles, &((charblock *)0x6000000)[0], 12832 / 2);
+    DMANow(3, instructionsBgTiles, &((charblock *)0x6000000)[0], 12800 / 2);
     DMANow(3, instructionsBgMap, &((screenblock *)0x6000000)[28], 2048 / 2);
     state = INSTRUCTIONS;
 

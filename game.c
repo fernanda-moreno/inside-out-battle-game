@@ -174,10 +174,10 @@ void updatePlayer() {
 	if (BUTTON_HELD(BUTTON_RIGHT) && player.col < ((SCREENWIDTH/2) - player.width)) {
 		player.col += player.cDel;
 	}
-	if (BUTTON_HELD(BUTTON_UP) && player.row > 10) {
+	if (BUTTON_HELD(BUTTON_UP) && player.row > 20) {
 		player.row -= player.rDel;
 	}
-	if (BUTTON_HELD(BUTTON_DOWN) && player.row < SCREENHEIGHT - 20) {
+	if (BUTTON_HELD(BUTTON_DOWN) && player.row < SCREENHEIGHT - 50) {
 		player.row += player.rDel;
 	}
 
@@ -349,8 +349,8 @@ void initMiniDepressions() {
 	for (int i = 0; i < ENEMYCOUNT; i++) {
 		miniDep1[i].width = 16;
 		miniDep1[i].height = 16;
-		miniDep1[i].row = (rand() % 110) + 10;
-		miniDep1[i].col = (rand() % 170) + 40;
+		miniDep1[i].row = (rand() % 90) + 20;
+		miniDep1[i].col = (rand() % 170) + 30;
 		miniDep1[i].rDel = 1;
 		miniDep1[i].active = 1;
 		miniDep1[i].index = i + 5;
@@ -374,7 +374,7 @@ void updateMiniDepressions() {
 	// When all depression babies are killed, more will appear!
 	if (enemiesRemaining == 0) {
 		initMiniDepressions();
-		enemiesRemaining = 8;
+		enemiesRemaining = 9;
 	}
 
 }
@@ -528,7 +528,7 @@ void initMemoryBalls() {
 
 	memball1.width = 16;
     memball1.height = 16;
-	memball1.row = (rand() % 110) + 1;
+	memball1.row = (rand() % 110) + 20;
 	memball1.col = (rand() % 60) + 25;
 	memball1.active = 1;
 	memball1.index = 70;

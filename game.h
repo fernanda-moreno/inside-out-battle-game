@@ -102,7 +102,7 @@ extern int depressionLivesRemaining;
 // Constants
 #define PLAYERBULLETCOUNT 30
 #define BADBULLETCOUNT 20
-#define ENEMYCOUNT 8
+#define ENEMYCOUNT 9
 #define MEMBALLCOUNT 2
 #define LIFECOUNT 5
 #define ENEMYLIFECOUNT 10

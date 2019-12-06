@@ -160,7 +160,7 @@ updatePlayer:
 	tst	r3, #64
 	ldr	r1, [r5, #4]
 	bne	.L28
-	cmp	r1, #10
+	cmp	r1, #20
 	ldrgt	r3, [r5, #12]
 	subgt	r1, r1, r3
 	strgt	r1, [r5, #4]
@@ -169,7 +169,7 @@ updatePlayer:
 	ldrh	r3, [r3, #48]
 	tst	r3, #128
 	bne	.L29
-	cmp	r1, #139
+	cmp	r1, #109
 	ldrle	r3, [r5, #12]
 	addle	r1, r1, r3
 	strle	r1, [r5, #4]
@@ -193,7 +193,7 @@ updatePlayer:
 .L36:
 	ldr	r4, .L88+12
 	ldr	r8, .L88+16
-	add	r6, r4, #352
+	add	r6, r4, #396
 	b	.L42
 .L40:
 	add	r4, r4, #44
@@ -535,12 +535,13 @@ initMiniDepressions:
 	bx	r6
 	smull	fp, ip, r0, r8
 	asr	r2, r0, #31
-	rsb	r3, r2, ip, asr #2
-	rsb	r2, r3, r3, lsl #3
-	rsb	r3, r3, r2, lsl #3
-	sub	r0, r0, r3, lsl #1
-	add	r0, r0, #10
-	str	r0, [r4, #4]
+	add	r3, r0, ip
+	rsb	r3, r2, r3, asr #6
+	add	r3, r3, r3, lsl #1
+	rsb	r3, r3, r3, lsl #4
+	sub	r3, r0, r3, lsl #1
+	add	r3, r3, #20
+	str	r3, [r4, #4]
 	mov	lr, pc
 	bx	r6
 	mov	r1, #1
@@ -552,8 +553,8 @@ initMiniDepressions:
 	str	r5, [r4, #32]
 	sub	r3, r0, r3, lsl r1
 	add	r5, r5, r1
-	add	r3, r3, #40
-	cmp	r5, #13
+	add	r3, r3, #30
+	cmp	r5, #14
 	str	r3, [r4]
 	str	r1, [r4, #12]
 	str	r1, [r4, #28]
@@ -566,7 +567,7 @@ initMiniDepressions:
 .L104:
 	.word	miniDep1
 	.word	rand
-	.word	156180629
+	.word	-1240768329
 	.word	1616928865
 	.size	initMiniDepressions, .-initMiniDepressions
 	.align	2
@@ -630,7 +631,7 @@ updateMiniDepressions:
 	cmp	r3, #0
 	bne	.L106
 	bl	initMiniDepressions
-	mov	r3, #8
+	mov	r3, #9
 	str	r3, [r7]
 .L106:
 	add	sp, sp, #20
@@ -642,7 +643,7 @@ updateMiniDepressions:
 .L123:
 	.word	b
 	.word	enemiesRemaining
-	.word	miniDep1+352
+	.word	miniDep1+396
 	.word	collision
 	.word	miniDep1
 	.size	updateMiniDepressions, .-updateMiniDepressions
@@ -661,7 +662,7 @@ drawMiniDepressions:
 	mov	r5, #40
 	ldr	r3, .L131
 	ldr	r0, .L131+4
-	add	lr, r3, #352
+	add	lr, r3, #396
 .L128:
 	ldr	r2, [r3, #28]
 	cmp	r2, #0
@@ -996,7 +997,7 @@ initMemoryBalls:
 	rsb	r2, r3, r3, lsl #3
 	rsb	r3, r3, r2, lsl #3
 	sub	r0, r0, r3, lsl #1
-	add	r0, r0, #1
+	add	r0, r0, #20
 	str	r0, [r5, #4]
 	mov	lr, pc
 	bx	r7
@@ -1908,7 +1909,7 @@ drawGame:
 	ldr	r3, .L301+12
 	strh	r1, [r5, #200]	@ movhi
 	strh	r2, [r5, #204]	@ movhi
-	add	ip, r3, #352
+	add	ip, r3, #396
 .L292:
 	ldr	r2, [r3, #28]
 	cmp	r2, #0
@@ -2316,8 +2317,8 @@ updateGame:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
 	mov	r0, #67108864
-	ldr	r1, .L365
-	ldr	r3, .L365+4
+	ldr	r1, .L367
+	ldr	r3, .L367+4
 	ldr	r2, [r1]
 	ldrh	ip, [r3]
 	add	r2, r2, #1
@@ -2325,25 +2326,21 @@ updateGame:
 	str	r2, [r1]
 	strh	ip, [r0, #16]	@ movhi
 	ldrh	r2, [r3]
-	ldr	r1, .L365+8
+	ldr	r1, .L367+8
 	add	r2, r2, #1
 	strh	r2, [r3]	@ movhi
+	mov	r4, #9
 	mov	lr, pc
 	bx	r1
 	bl	updatePlayer
 	bl	updateDepression
+.L336:
 	bl	updateMiniDepressions
-	bl	updateMiniDepressions
-	bl	updateMiniDepressions
-	bl	updateMiniDepressions
-	bl	updateMiniDepressions
-	bl	updateMiniDepressions
-	bl	updateMiniDepressions
-	bl	updateMiniDepressions
-	mov	ip, #0
-	ldr	r3, .L365+12
+	subs	r4, r4, #1
+	bne	.L336
+	ldr	r3, .L367+12
 	add	r1, r3, #1200
-.L338:
+.L339:
 	ldr	r2, [r3, #32]
 	cmp	r2, #0
 	ldrne	r0, [r3, #20]
@@ -2352,13 +2349,13 @@ updateGame:
 	addne	r2, r2, r0
 	strne	r2, [r3]
 	cmp	r2, #230
-	streq	ip, [r3, #32]
+	streq	r4, [r3, #32]
 	add	r3, r3, #40
 	cmp	r1, r3
-	bne	.L338
-	ldr	r3, .L365+16
+	bne	.L339
+	ldr	r3, .L367+16
 	add	r1, r3, #800
-.L341:
+.L342:
 	ldr	r2, [r3, #32]
 	cmp	r2, #0
 	ldrne	r0, [r3, #16]
@@ -2370,59 +2367,59 @@ updateGame:
 	streq	r2, [r3, #32]
 	add	r3, r3, #40
 	cmp	r3, r1
-	bne	.L341
-	ldr	r4, .L365+20
+	bne	.L342
+	ldr	r4, .L367+20
 	ldr	r3, [r4, #24]
 	cmp	r3, #30
 	addne	r2, r3, #1
-	beq	.L361
-.L343:
-	ldr	r0, .L365+24
+	beq	.L363
+.L344:
+	ldr	r0, .L367+24
 	ldr	r3, [r0]
 	add	r3, r3, #1
 	cmp	r3, #30
 	str	r2, [r4, #24]
 	str	r3, [r0]
-	beq	.L362
-.L345:
+	beq	.L364
+.L346:
 	add	r3, r3, #1
 	cmp	r3, #30
 	str	r3, [r0]
-	beq	.L363
-.L346:
+	beq	.L365
+.L347:
 	bl	updateLives
 	mov	r4, #10
 	bl	updateLives
 	bl	updateLives
 	bl	updateLives
 	bl	updateLives
-.L347:
+.L348:
 	bl	updateEnemyLives
 	subs	r4, r4, #1
-	bne	.L347
+	bne	.L348
 	pop	{r4, lr}
 	bx	lr
-.L361:
+.L363:
 	ldr	r3, [r4, #28]
 	cmp	r3, #0
-	bne	.L364
-.L344:
+	bne	.L366
+.L345:
 	mov	r2, #1
-	b	.L343
-.L363:
+	b	.L344
+.L365:
 	bl	updateMemoryBalls.part.3
-	b	.L346
-.L362:
+	b	.L347
+.L364:
 	bl	updateMemoryBalls.part.3
 	ldr	r3, [r0]
-	b	.L345
-.L364:
+	b	.L346
+.L366:
 	mov	r0, r4
 	bl	fireBadBullets.part.2
-	b	.L344
-.L366:
+	b	.L345
+.L368:
 	.align	2
-.L365:
+.L367:
 	.word	frameCounter
 	.word	hOff
 	.word	waitForVBlank
@@ -2442,76 +2439,76 @@ interruptHandler:
 	@ args = 0, pretend = 0, frame = 0
 	@ frame_needed = 0, uses_anonymous_args = 0
 	mov	r2, #0
-	ldr	r3, .L386
+	ldr	r3, .L388
 	ldrh	r1, [r3, #2]
 	tst	r1, #1
 	strh	r2, [r3, #8]	@ movhi
-	beq	.L381
-	ldr	r0, .L386+4
+	beq	.L383
+	ldr	r0, .L388+4
 	ldr	r3, [r0, #12]
 	cmp	r3, r2
 	push	{r4, lr}
-	beq	.L370
+	beq	.L372
 	ldr	r3, [r0, #28]
 	ldr	r2, [r0, #20]
 	add	r3, r3, #1
 	cmp	r3, r2
 	str	r3, [r0, #28]
-	blt	.L370
+	blt	.L372
 	ldr	r3, [r0, #16]
 	cmp	r3, #0
-	bne	.L384
-	ldr	r1, .L386+8
-	ldr	r2, .L386+12
+	bne	.L386
+	ldr	r1, .L388+8
+	ldr	r2, .L388+12
 	ldr	r1, [r1]
 	str	r3, [r0, #12]
 	str	r3, [r1, #20]
 	strh	r3, [r2, #2]	@ movhi
-.L370:
-	ldr	r0, .L386+16
+.L372:
+	ldr	r0, .L388+16
 	ldr	r3, [r0, #12]
 	cmp	r3, #0
-	beq	.L374
+	beq	.L376
 	ldr	r3, [r0, #28]
 	ldr	r2, [r0, #20]
 	add	r3, r3, #1
 	cmp	r3, r2
 	str	r3, [r0, #28]
-	blt	.L374
+	blt	.L376
 	ldr	r3, [r0, #16]
 	cmp	r3, #0
-	bne	.L385
-	ldr	r1, .L386+8
-	ldr	r2, .L386+12
+	bne	.L387
+	ldr	r1, .L388+8
+	ldr	r2, .L388+12
 	ldr	r1, [r1]
 	str	r3, [r0, #12]
 	str	r3, [r1, #32]
 	strh	r3, [r2, #6]	@ movhi
-.L374:
+.L376:
 	mov	r2, #1
-	ldr	r3, .L386
+	ldr	r3, .L388
 	strh	r2, [r3, #2]	@ movhi
 	mov	r2, #1
-	ldr	r3, .L386
+	ldr	r3, .L388
 	pop	{r4, lr}
 	strh	r2, [r3, #8]	@ movhi
 	bx	lr
-.L381:
+.L383:
 	mov	r2, #1
-	ldr	r3, .L386
+	ldr	r3, .L388
 	strh	r2, [r3, #8]	@ movhi
 	bx	lr
-.L384:
+.L386:
 	ldm	r0, {r0, r1, r2}
 	bl	playSoundA
-	b	.L370
-.L385:
+	b	.L372
+.L387:
 	ldm	r0, {r0, r1, r2}
 	bl	playSoundB
-	b	.L374
-.L387:
+	b	.L376
+.L389:
 	.align	2
-.L386:
+.L388:
 	.word	67109376
 	.word	soundA
 	.word	dma
@@ -2532,21 +2529,21 @@ setupInterrupts:
 	str	lr, [sp, #-4]!
 	mov	lr, #1
 	ldrh	r1, [r0, #4]
-	ldr	r3, .L390
+	ldr	r3, .L392
 	orr	r1, r1, #8
 	ldrh	r2, [r3]
-	ldr	ip, .L390+4
+	ldr	ip, .L392+4
 	strh	r1, [r0, #4]	@ movhi
-	ldr	r1, .L390+8
+	ldr	r1, .L392+8
 	orr	r2, r2, lr
 	strh	lr, [r3, #8]	@ movhi
 	strh	r2, [r3]	@ movhi
 	ldr	lr, [sp], #4
 	str	r1, [ip, #4092]
 	bx	lr
-.L391:
+.L393:
 	.align	2
-.L390:
+.L392:
 	.word	67109376
 	.word	50360320
 	.word	interruptHandler
@@ -2563,17 +2560,17 @@ pauseSound:
 	@ frame_needed = 0, uses_anonymous_args = 0
 	@ link register save eliminated.
 	mov	r3, #0
-	ldr	r2, .L393
-	ldr	r0, .L393+4
-	ldr	r1, .L393+8
+	ldr	r2, .L395
+	ldr	r0, .L395+4
+	ldr	r1, .L395+8
 	str	r3, [r0, #12]
 	str	r3, [r1, #12]
 	strh	r3, [r2, #2]	@ movhi
 	strh	r3, [r2, #6]	@ movhi
 	bx	lr
-.L394:
+.L396:
 	.align	2
-.L393:
+.L395:
 	.word	67109120
 	.word	soundA
 	.word	soundB
@@ -2591,17 +2588,17 @@ unpauseSound:
 	@ link register save eliminated.
 	mov	r1, #128
 	mov	r3, #1
-	ldr	r2, .L396
-	ldr	ip, .L396+4
-	ldr	r0, .L396+8
+	ldr	r2, .L398
+	ldr	ip, .L398+4
+	ldr	r0, .L398+8
 	strh	r1, [r2, #2]	@ movhi
 	str	r3, [ip, #12]
 	strh	r1, [r2, #6]	@ movhi
 	str	r3, [r0, #12]
 	bx	lr
-.L397:
+.L399:
 	.align	2
-.L396:
+.L398:
 	.word	67109120
 	.word	soundA
 	.word	soundB
@@ -2618,11 +2615,11 @@ stopSound:
 	@ frame_needed = 0, uses_anonymous_args = 0
 	@ link register save eliminated.
 	mov	r3, #0
-	ldr	r1, .L399
-	ldr	r2, .L399+4
+	ldr	r1, .L401
+	ldr	r2, .L401+4
 	ldr	r1, [r1]
-	ldr	ip, .L399+8
-	ldr	r0, .L399+12
+	ldr	ip, .L401+8
+	ldr	r0, .L401+12
 	str	r3, [r1, #20]
 	str	r3, [ip, #12]
 	strh	r3, [r2, #2]	@ movhi
@@ -2630,9 +2627,9 @@ stopSound:
 	str	r3, [r1, #32]
 	strh	r3, [r2, #6]	@ movhi
 	bx	lr
-.L400:
+.L402:
 	.align	2
-.L399:
+.L401:
 	.word	dma
 	.word	67109120
 	.word	soundA
@@ -2663,7 +2660,7 @@ stopSound:
 	.comm	memball1,48,4
 	.comm	bb,800,4
 	.comm	b,1200,4
-	.comm	miniDep1,352,4
+	.comm	miniDep1,396,4
 	.comm	depression,44,4
 	.comm	player,36,4
 	.comm	soundB,32,4

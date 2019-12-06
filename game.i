@@ -1080,7 +1080,7 @@ PLAYER player;
 
 ENEMY depression;
 
-ENEMY miniDep1[8];
+ENEMY miniDep1[9];
 
 PLAYERBULLET b[30];
 BADBULLET bb[20];
@@ -1158,7 +1158,7 @@ void updateGame() {
 
  updateDepression();
 
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < 9; i++) {
         updateMiniDepressions();
     }
 
@@ -1244,10 +1244,10 @@ void updatePlayer() {
  if ((~((*(volatile unsigned short *)0x04000130)) & ((1<<4))) && player.col < ((240/2) - player.width)) {
   player.col += player.cDel;
  }
- if ((~((*(volatile unsigned short *)0x04000130)) & ((1<<6))) && player.row > 10) {
+ if ((~((*(volatile unsigned short *)0x04000130)) & ((1<<6))) && player.row > 20) {
   player.row -= player.rDel;
  }
- if ((~((*(volatile unsigned short *)0x04000130)) & ((1<<7))) && player.row < 160 - 20) {
+ if ((~((*(volatile unsigned short *)0x04000130)) & ((1<<7))) && player.row < 160 - 50) {
   player.row += player.rDel;
  }
 
@@ -1271,7 +1271,7 @@ void updatePlayer() {
  }
 
 
- for (int i = 0; i < 8; i++) {
+ for (int i = 0; i < 9; i++) {
   if ((player.col > 10) && miniDep1[i].active && collision(player.col, player.row, player.width, player.height,
   miniDep1[i].col, miniDep1[i].row, miniDep1[i].width, miniDep1[i].height)) {
 
@@ -1314,7 +1314,6 @@ void updatePlayer() {
   if ((~((*(volatile unsigned short *)0x04000130)) & ((1<<4))))
    player.curFrame = 2;
  }
-
 
  if (player.aniState == 1) {
   if ((!(~(oldButtons)&((1<<9))) && (~buttons & ((1<<9))))) {
@@ -1417,11 +1416,11 @@ void drawDepression() {
 
 
 void initMiniDepressions() {
- for (int i = 0; i < 8; i++) {
+ for (int i = 0; i < 9; i++) {
   miniDep1[i].width = 16;
   miniDep1[i].height = 16;
-  miniDep1[i].row = (rand() % 110) + 10;
-  miniDep1[i].col = (rand() % 170) + 40;
+  miniDep1[i].row = (rand() % 90) + 20;
+  miniDep1[i].col = (rand() % 170) + 30;
   miniDep1[i].rDel = 1;
   miniDep1[i].active = 1;
   miniDep1[i].index = i + 5;
@@ -1432,7 +1431,7 @@ void initMiniDepressions() {
 
 void updateMiniDepressions() {
  for (int i = 0; i < 30; i++) {
-  for (int j = 0; j < 8; j++) {
+  for (int j = 0; j < 9; j++) {
    if (miniDep1[j].active && b[i].active && collision(miniDep1[j].col, miniDep1[j].row, miniDep1[j].width, miniDep1[j].height,
    b[i].col, b[i].row, b[i].width, b[i].height)) {
     b[i].active = 0;
@@ -1445,7 +1444,7 @@ void updateMiniDepressions() {
 
  if (enemiesRemaining == 0) {
   initMiniDepressions();
-  enemiesRemaining = 8;
+  enemiesRemaining = 9;
  }
 
 }
@@ -1453,7 +1452,7 @@ void updateMiniDepressions() {
 
 void drawMiniDepressions() {
 
- for (int i = 0; i < 8; i ++) {
+ for (int i = 0; i < 9; i ++) {
 
   if(miniDep1[i].active) {
 
@@ -1599,7 +1598,7 @@ void initMemoryBalls() {
 
  memball1.width = 16;
     memball1.height = 16;
- memball1.row = (rand() % 110) + 1;
+ memball1.row = (rand() % 110) + 20;
  memball1.col = (rand() % 60) + 25;
  memball1.active = 1;
  memball1.index = 70;

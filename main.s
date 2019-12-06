@@ -30,7 +30,7 @@ goToStart:
 	ldr	r1, .L4+4
 	mov	lr, pc
 	bx	r4
-	mov	r3, #3728
+	mov	r3, #4032
 	mov	r2, #100663296
 	ldr	r1, .L4+8
 	mov	r0, #3
@@ -87,7 +87,7 @@ initialize:
 	push	{r4, lr}
 	mov	r4, #4352
 	mov	r0, #5
-	mov	lr, #8
+	mov	lr, #9
 	mov	ip, #10
 	mov	r1, #0
 	strh	r2, [r3, #8]	@ movhi
@@ -157,20 +157,20 @@ goToInstructions:
 	mov	r0, #3
 	mov	lr, pc
 	bx	r4
-	ldr	r3, .L16+8
+	mov	r3, #6400
 	mov	r2, #100663296
-	ldr	r1, .L16+12
+	ldr	r1, .L16+8
 	mov	r0, #3
 	mov	lr, pc
 	bx	r4
 	mov	r3, #1024
-	ldr	r2, .L16+16
-	ldr	r1, .L16+20
+	ldr	r2, .L16+12
+	ldr	r1, .L16+16
 	mov	r0, #3
 	mov	lr, pc
 	bx	r4
 	mov	r2, #1
-	ldr	r3, .L16+24
+	ldr	r3, .L16+20
 	pop	{r4, lr}
 	str	r2, [r3]
 	bx	lr
@@ -179,7 +179,6 @@ goToInstructions:
 .L16:
 	.word	DMANow
 	.word	instructionsBgPal
-	.word	6416
 	.word	instructionsBgTiles
 	.word	100720640
 	.word	instructionsBgMap
